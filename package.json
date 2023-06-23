@@ -1,0 +1,28 @@
+{
+  "name": "sbpac_fullstack",
+  "version": "1.0.0",
+  "description": "api-backend node.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "backend"
+  ],
+  "author": "ponnipa jantawong",
+  "license": "ISC",
+  "dependencies": {
+    "base64-img": "^1.0.4",
+    "bcryptjs": "^2.4.3",
+    "chai": "^4.3.7",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^10.2.0",
+    "multer": "^1.4.4",
+    "mysql": "^2.18.1",
+    "puppeteer": "^20.7.3",
+    "selenium-webdriver": "^4.10.0"
+  }
+}
