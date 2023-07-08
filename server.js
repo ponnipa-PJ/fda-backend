@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const base64Img = require('base64-img');
-var multer  = require('multer');
+var multer = require('multer');
+const puppeteer = require('puppeteer');
 
 const app = express();
 
 var corsOptions = {
-    origin: "*"
+  origin: "*"
 };
 
 
@@ -16,17 +17,16 @@ const PORT = process.env.PORT || 8081;
 app.use(cors(corsOptions));
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 
 app.use(express.static('./uploads'))
 app.use("/images", express.static("/uploads/users"));
 
 var upload = multer({ dest: __dirname + '/uploads/' });
-var type = upload.single('upl');
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -36,35 +36,32 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-    res.json({ message: "Welcome to excise application." });
+  res.json({ message: "Welcome to fda application." });
 });
 
-app.get("/up", (req, res) => {
-    res.json({ message: "45 to excise application." });
+app.get("/scraping", (req, res) => {
+
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    var url = req.query.url
+    console.log(url);
+    await page.goto(url);
+    const textSelector = await page.waitForSelector(
+      '.product-detail'
+    );
+    const fullTitle = await textSelector?.evaluate(el => el.textContent);
+
+    // Print the full title
+    // console.log('The title of this blog post is "%s".', fullTitle);
+    res.send(fullTitle)
+    await browser.close();
+  })();
 });
 
-app.post('/upload', (req, res) => {
-    const { image } = req.body;
-    //console.log(req.body);
-    base64Img.img(image, './uploads', new Date(), function(err, filepath) {
-      const pathArr = filepath.split('/')
-      const fileName = pathArr[pathArr.length - 1];
-  
-      res.status(200).json({
-        success: true,
-        url: `http://127.0.0.1:${PORT}/${fileName}`
-      })
-    });
-  });
 
-require("./app/routes/detail_excise.routes.js")(app);
-require("./app/routes/report_liquor_tax.routes.js")(app);
-require("./app/routes/liquor_factories.routes.js")(app);
-require("./app/routes/merge_liquor_report.routes.js")(app);
-require("./app/routes/report.routes.js")(app);
-require("./app/routes/menu.routes.js")(app);
-require("./app/routes/user.routes.js")(app);
+require("./app/routes/products.routes")(app);
 
 app.listen(PORT, () => {
-    //console.log(`Server is running on port ${PORT}.`);
+  //console.log(`Server is running on port ${PORT}.`);
 });

@@ -2,7 +2,7 @@ module.exports = {
     HOST: "localhost",
     USER: "root",
     PASSWORD: "",
-    DB: "excisedb",
+    DB: "fdadb",
     dialect: "mysql",
     // HOST: "localhost:3306",
     // USER: "aqua_tipfarm",
