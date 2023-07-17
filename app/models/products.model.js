@@ -1,19 +1,40 @@
 const sql = require("./db");
 const puppeteer = require('puppeteer');
 
+var natural = require('natural');
+const axios = require('axios');
+const path = require('path');
+
 const Data = function (datas) {
     this.id=datas.id,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
 };
 
-Data.findproduct = (newData, result) => {
+Data.findproduct = async (newData, result) => {
+            var list = []
     let query = `SELECT * FROM products WHERE url = '${newData.url}'`;
     // console.log(query);
     sql.query(query, (err, res) => {
+        // console.log(res[0]);
+//         var conten = res[0].content
+// var tokenizer = new natural.WordTokenizer();
+// console.log(tokenizer.tokenize(conten));
+
+list.push({
+id:res[0].id,
+path:res[0].path,
+image_path:res[0].image_path,
+url:res[0].url,
+content:res[0].content,
+status:res[0].status,
+created_date:res[0].created_date,
+updated_date:res[0].updated_date,
+
+})
         if (err) {
             result(null, err);
             return;
         }
-        result(null, res);
+        result(null, list);
     });
 }
 
@@ -27,8 +48,10 @@ Data.findscraping = (newData, result) => {
     (async () => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        console.log(res[0].path);
-        await page.goto(res[0].path);
+        // console.log(res[0].path);
+        var paths = 'file:///'+path.resolve("./") +'/'+res[0].path
+        // console.log(paths);
+        await page.goto(paths);
         const textSelector = await page.waitForSelector(
           '.product-detail', {timeout:0}
         );
