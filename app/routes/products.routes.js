@@ -11,6 +11,10 @@ router.post("/findproduct", datas.findproduct);
 
 router.post("/findscraping", datas.findscraping);
 
+router.post("/findscrapingheader", datas.findscrapingheader);
+
+router.post("/saveimageproduct", datas.saveimageproduct);
+
 router.get("/:id", datas.findOne);
 
 router.put("/:id", datas.update);

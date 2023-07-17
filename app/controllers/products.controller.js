@@ -1,6 +1,46 @@
 const Data = require("../models/products.model.js");
 
 
+exports.saveimageproduct = (req, res) => {
+    if (!req.body) {
+    res.status(400).send({
+    message: 'Content can not be empty!'
+    });
+    }
+    
+    const datas = new Data({
+        name:req.body.name, id:req.body.id,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
+        console.log(datas);
+    Data.saveimageproduct(datas, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while creating the Tutorial."
+    });
+    else res.send(data);
+    });
+    };
+
+exports.findscrapingheader = (req, res) => {
+    if (!req.body) {
+    res.status(400).send({
+    message: 'Content can not be empty!'
+    });
+    }
+    
+    const datas = new Data({
+        name:req.body.name, id:req.body.id,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
+        console.log(datas);
+    Data.findscrapingheader(datas, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while creating the Tutorial."
+    });
+    else res.send(data);
+    });
+    };
+
 exports.findscraping = (req, res) => {
     if (!req.body) {
     res.status(400).send({
@@ -9,7 +49,7 @@ exports.findscraping = (req, res) => {
     }
     
     const datas = new Data({
-        id:req.body.id,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
+        name:req.body.name, id:req.body.id,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
         console.log(datas);
     Data.findscraping(datas, (err, data) => {
     if (err)

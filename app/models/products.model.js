@@ -6,19 +6,16 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.id=datas.id,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
+    this.name=datas.name,this.id=datas.id,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
 };
 
 Data.findproduct = async (newData, result) => {
             var list = []
     let query = `SELECT * FROM products WHERE url = '${newData.url}'`;
     // console.log(query);
-    sql.query(query, (err, res) => {
-        // console.log(res[0]);
-//         var conten = res[0].content
-// var tokenizer = new natural.WordTokenizer();
-// console.log(tokenizer.tokenize(conten));
-
+    sql.query(query, async (err, res) => {
+//         await axios.get('http://127.0.0.1:5000/worktoken?text=' + res[0].content).then((token) => {
+// console.log(token.data);
 list.push({
 id:res[0].id,
 path:res[0].path,
@@ -28,7 +25,9 @@ content:res[0].content,
 status:res[0].status,
 created_date:res[0].created_date,
 updated_date:res[0].updated_date,
-
+name:res[0].name,
+// token:token.data
+// });
 })
         if (err) {
             result(null, err);
@@ -38,13 +37,62 @@ updated_date:res[0].updated_date,
     });
 }
 
-Data.findscraping = (newData, result) => {
+Data.saveimageproduct = (newData, result) => {
+    // console.log(newData);
+    let query = `SELECT * FROM products WHERE id = ${newData.id}`;
+    
+    // console.log(query);
+    sql.query(query, (err, res) => {
+        // console.log(res);
+    (async () => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        // console.log(res[0].path);
+        var paths = 'file:///'+path.resolve("./") +'/'+res[0].path
+        // console.log(paths);
+        await page.setViewport({width:1920,height:1080})
+        await page.goto(paths);
+        var name = path.resolve("./")+'/uploads/'+ newData.id+'.jpg'
+        console.log(name);
+        await page.screenshot({path:name})
+        
+        result(null, 'success');
+        await browser.close();
+      })();
+    });
+}
+
+Data.findscrapingheader = (newData, result) => {
     console.log(newData);
     let query = `SELECT * FROM products WHERE id = ${newData.id}`;
     
-    console.log(query);
+    // console.log(query);
     sql.query(query, (err, res) => {
-        console.log(res);
+        // console.log(res);
+    (async () => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        // console.log(res[0].path);
+        var paths = 'file:///'+path.resolve("./") +'/'+res[0].path
+        // console.log(paths);
+        await page.goto(paths);
+        const textSelector = await page.waitForSelector(
+          '._44qnta', {timeout:0}
+        );
+        const fullTitle = await textSelector?.evaluate(el => el.textContent);
+        result(null, fullTitle);
+        await browser.close();
+      })();
+    });
+}
+
+Data.findscraping = (newData, result) => {
+    // console.log(newData);
+    let query = `SELECT * FROM products WHERE id = ${newData.id}`;
+    
+    // console.log(query);
+    sql.query(query, (err, res) => {
+        // console.log(res);
     (async () => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
@@ -56,9 +104,6 @@ Data.findscraping = (newData, result) => {
           '.product-detail', {timeout:0}
         );
         const fullTitle = await textSelector?.evaluate(el => el.textContent);
-    
-        // Print the full title
-        // console.log('The title of this blog post is "%s".', fullTitle);
         result(null, fullTitle);
         await browser.close();
       })();
@@ -76,7 +121,8 @@ Data.create = (newData, result) => {
 }
 
 Data.getAll = (url, result) => {
-    let query = "SELECT * FROM products WHERE status = 0";
+    let query = "SELECT * FROM products";
+    // let query = "SELECT * FROM products WHERE status = 0";
     if (url) {
         query += ` and url =  '${url}'`;
     }
@@ -106,8 +152,8 @@ Data.findById = (id, result) => {
 
 Data.updateById = (id, datas, result) => {
     sql.query(
-        "UPDATE products SET content = ?,status = ?,updated_date = ? WHERE id = ?",
-        [datas.content, datas.status, new Date(), id], (err, res) => {
+        "UPDATE products SET content = ?, name = ? ,status = ?,updated_date = ? WHERE id = ?",
+        [datas.content,datas.name, datas.status, new Date(), id], (err, res) => {
             if (err) {
                 result(null, err);
                 return;
