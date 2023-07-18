@@ -6,7 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.name=datas.name,this.id=datas.id,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
+    this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
 };
 
 Data.findproduct = async (newData, result) => {
@@ -111,7 +111,9 @@ Data.findscraping = (newData, result) => {
 }
 
 Data.create = (newData, result) => {
-    sql.query("INSERT INTO products SET ?", newData, (err, res) => {
+    sql.query("INSERT INTO products SET ?", newData, (err, res) => {    
+        console.log(err);
+
         if (err) {
             result(err, null);
             return;
@@ -121,7 +123,7 @@ Data.create = (newData, result) => {
 }
 
 Data.getAll = (url, result) => {
-    let query = "SELECT * FROM products";
+    let query = "SELECT p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
     if (url) {
         query += ` and url =  '${url}'`;
@@ -137,7 +139,7 @@ Data.getAll = (url, result) => {
 };
 
 Data.findById = (id, result) => {
-    sql.query(`SELECT * FROM products WHERE id = ${id}`, (err, res) => {
+    sql.query(`SELECT p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.id = ${id}`, (err, res) => {
         if (err) {
             result(err, null);
             return;
@@ -152,8 +154,8 @@ Data.findById = (id, result) => {
 
 Data.updateById = (id, datas, result) => {
     sql.query(
-        "UPDATE products SET content = ?, name = ? ,status = ?,updated_date = ? WHERE id = ?",
-        [datas.content,datas.name, datas.status, new Date(), id], (err, res) => {
+        "UPDATE products SET file=?,cat_id=?,path=?,image_path=?,url=?,status = ?,updated_date = ? WHERE id = ?",
+        [datas.file,datas.cat_id,datas.path,datas.image_path,datas.url, datas.status, new Date(), id], (err, res) => {
             if (err) {
                 result(null, err);
                 return;

@@ -1,10 +1,10 @@
 var fs = require("fs");
 
-var table = "products"
+var table = "category"
 var id = 'id'
 var data = [
     // 'request_at','request_date','request_receiver','write_at','write_date','name','relate','address','moo','soi','road','tambon_id','amphur_id','province_id','phone','type_id','number','license_no1','license_no2','license_no3','checkbox','business','of','from_date','to_date','origin','stop','destination','stop_through','station_master_id','consideration_status','registrar_id','line_at','officer_id','status_id','updated_date','created_by','update_by'
-    'path','url','content','status','updated_date'
+    'code','name','status'
 ]
 
 

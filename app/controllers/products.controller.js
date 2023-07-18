@@ -9,7 +9,7 @@ exports.saveimageproduct = (req, res) => {
     }
     
     const datas = new Data({
-        name:req.body.name, id:req.body.id,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
+        cat_id:req.body.cat_id,name:req.body.name, id:req.body.id,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
         console.log(datas);
     Data.saveimageproduct(datas, (err, data) => {
     if (err)
@@ -88,8 +88,9 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
-Data.create(datas, (err, data) => {
+    cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),});
+console.log(datas);
+    Data.create(datas, (err, data) => {
 if (err)
 res.status(500).send({
 message:
