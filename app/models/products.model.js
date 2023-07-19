@@ -6,7 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
+    this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
 };
 
 Data.findproduct = async (newData, result) => {
@@ -48,7 +48,7 @@ Data.saveimageproduct = (newData, result) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         // console.log(res[0].path);
-        var paths = 'file:///'+path.resolve("./") +'/'+res[0].path
+        var paths = 'file:///'+path.resolve("./") +'/'+newData.path
         // console.log(paths);
         await page.setViewport({width:1920,height:1080})
         await page.goto(paths);
@@ -73,7 +73,7 @@ Data.findscrapingheader = (newData, result) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         // console.log(res[0].path);
-        var paths = 'file:///'+path.resolve("./") +'/'+res[0].path
+        var paths = 'file:///'+path.resolve("./") +'/'+newData.path
         // console.log(paths);
         await page.goto(paths);
         const textSelector = await page.waitForSelector(
@@ -97,7 +97,7 @@ Data.findscraping = (newData, result) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         // console.log(res[0].path);
-        var paths = 'file:///'+path.resolve("./") +'/'+res[0].path
+        var paths = 'file:///'+path.resolve("./") +'/'+newData.path
         // console.log(paths);
         await page.goto(paths);
         const textSelector = await page.waitForSelector(
@@ -122,11 +122,11 @@ Data.create = (newData, result) => {
     });
 }
 
-Data.getAll = (url, result) => {
-    let query = "SELECT p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id";
+Data.getAll = (status, result) => {
+    let query = "SELECT p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.statusdelete = 1";
     // let query = "SELECT * FROM products WHERE status = 0";
-    if (url) {
-        query += ` and url =  '${url}'`;
+    if (status) {
+        query += ` and p.status =  ${status}`;
     }
     console.log(query);
     sql.query(query, (err, res) => {
@@ -139,7 +139,7 @@ Data.getAll = (url, result) => {
 };
 
 Data.findById = (id, result) => {
-    sql.query(`SELECT p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.id = ${id}`, (err, res) => {
+    sql.query(`SELECT p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.id = ${id} and p.statusdelete = 1`, (err, res) => {
         if (err) {
             result(err, null);
             return;
@@ -150,6 +150,23 @@ Data.findById = (id, result) => {
         }
         result({ kind: "not_found" }, null);
     });
+};
+
+Data.updatescraping = (id, datas, result) => {
+    // console.log(datas);
+    sql.query(
+        "UPDATE products SET name=?,content=?,status=?,updated_date = ? WHERE id = ?",
+        [datas.name,datas.content,datas.status, new Date(), id], (err, res) => {
+            if (err) {
+                result(null, err);
+                return;
+            }
+            if (res.affectedRows == 0) {
+                result({ kind: "not_found" }, null);
+                return;
+            }; result(null, { id: id, ...datas });
+        }
+    );
 };
 
 Data.updateById = (id, datas, result) => {
@@ -169,7 +186,7 @@ Data.updateById = (id, datas, result) => {
 };
 Data.remove = (id, result) => {
     sql.query(
-        "DELETE FROM products  WHERE id = ?", id, (err, res) => {
+        "UPDATE products SET statusdelete = 0 WHERE id = ?", id, (err, res) => {
             if (err) {
                 result(null, err);
                 return;

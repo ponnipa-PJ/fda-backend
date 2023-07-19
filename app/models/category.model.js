@@ -17,6 +17,7 @@ let query = "SELECT * FROM category";
 if (status) {
 query += ` WHERE status = ${status}`;
 }
+console.log(status);
 sql.query(query, (err, res) => {
 if (err) {
 result(null, err);
@@ -41,8 +42,8 @@ result({ kind: "not_found" }, null);
 
 Data.updateById = (id, datas, result) => {
 sql.query(
-"UPDATE category SET code = ?,name = ?,status = ? WHERE id = ?",
-[datas.code,datas.name,datas.status,id],(err, res) => {
+"UPDATE category SET name = ?,status = ? WHERE id = ?",
+[datas.name,datas.status,id],(err, res) => {
 if (err) {
 result(null, err);
 return;
@@ -56,7 +57,7 @@ return;
 };
 Data.remove = (id, result) => {
 sql.query(
-"DELETE FROM category  WHERE id = ?",id, (err, res) => {
+"UPDATE category SET status = 0  WHERE id = ?",id, (err, res) => {
 if (err) {
 result(null, err);
 return;

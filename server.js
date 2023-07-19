@@ -117,6 +117,7 @@ app.get("/img", (req, res) => {
 
 require("./app/routes/products.routes")(app);
 require("./app/routes/category.routes")(app);
+require("./app/routes/dicts.routes")(app);
 
 app.listen(PORT, () => {
   //console.log(`Server is running on port ${PORT}.`);

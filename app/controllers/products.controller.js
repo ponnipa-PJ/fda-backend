@@ -88,7 +88,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-    cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),});
+    statusdelete:req.body.statusdelete,cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),});
 console.log(datas);
     Data.create(datas, (err, data) => {
 if (err)
@@ -101,9 +101,9 @@ else res.send(data);
 };
 
 exports.findAll = (req, res) => {
-const url = req.query.url;
+const status = req.query.status;
 // console.log(req.body);
-Data.getAll(url, (err, data) => {
+Data.getAll(status, (err, data) => {
 if (err)
 res.status(500).send({
 message:
@@ -140,6 +140,27 @@ exports.findproduct = (req, res) => {
     }
     );
     };
+    
+
+    exports.updatescraping = (req, res) => {
+        if (!req.body) {
+        res.status(400).send({
+        message: 'Content can not be empty!'
+        });
+        }
+        
+        Data.updatescraping(
+        req.params.id,
+        new Data(req.body),
+        (err, data) => {
+        if (err) {
+        if (err.kind === "not_found") {
+        res.send([]);
+        }
+        } else res.send(data);
+        }
+        );
+        };
 
 exports.update = (req, res) => {
 if (!req.body) {
