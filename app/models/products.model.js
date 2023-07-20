@@ -6,12 +6,12 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
+    this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
 };
 
 Data.findproduct = async (newData, result) => {
             var list = []
-    let query = `SELECT * FROM products WHERE url = '${newData.url}'`;
+    let query = `SELECT p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.url = '${newData.url}'`;
     // console.log(query);
     sql.query(query, async (err, res) => {
 //         await axios.get('http://127.0.0.1:5000/worktoken?text=' + res[0].content).then((token) => {
@@ -33,7 +33,7 @@ name:res[0].name,
             result(null, err);
             return;
         }
-        result(null, list);
+        result(null, res);
     });
 }
 
@@ -153,10 +153,11 @@ Data.findById = (id, result) => {
 };
 
 Data.updatescraping = (id, datas, result) => {
-    // console.log(datas);
+    console.log("UPDATE products SET fda=?,name=?,content=?,status=?,updated_date = ? WHERE id = ?",
+    [datas.fda,datas.name,datas.content,datas.status, new Date(), id]);
     sql.query(
-        "UPDATE products SET name=?,content=?,status=?,updated_date = ? WHERE id = ?",
-        [datas.name,datas.content,datas.status, new Date(), id], (err, res) => {
+        "UPDATE products SET fda=?,name=?,content=?,status=?,updated_date = ? WHERE id = ?",
+        [datas.fda,datas.name,datas.content,datas.status, new Date(), id], (err, res) => {
             if (err) {
                 result(null, err);
                 return;

@@ -88,7 +88,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-    statusdelete:req.body.statusdelete,cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),});
+    fda:req.body.fda,statusdelete:req.body.statusdelete,cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),});
 console.log(datas);
     Data.create(datas, (err, data) => {
 if (err)
