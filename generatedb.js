@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-var table = "dicts"
+var table = "fdatypes"
 var id = 'id'
 var data = [
     'name'
