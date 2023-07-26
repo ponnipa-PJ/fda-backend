@@ -6,12 +6,12 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
+    this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
 };
 
 Data.findproduct = async (newData, result) => {
             var list = []
-    let query = `SELECT p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.url = '${newData.url}'`;
+    let query = `SELECT p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.url = '${newData.url}'`;
     console.log(query);
     sql.query(query, async (err, res) => {
         console.log(res);
@@ -51,7 +51,7 @@ Data.saveimageproduct = (newData, result) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         // console.log(res[0].path);
-        var paths = 'file:///'+path.resolve("./") +'/'+newData.path
+        var paths = backend_path+path.resolve("./") +'/'+newData.path
         // console.log(paths);
         await page.setViewport({width:1920,height:1080})
         await page.goto(paths);
@@ -76,7 +76,7 @@ Data.findscrapingheader = (newData, result) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         // console.log(res[0].path);
-        var paths = 'file:///'+path.resolve("./") +'/'+newData.path
+        var paths = path.resolve("./") +'/'+newData.path
         // console.log(paths);
         await page.goto(paths);
         const textSelector = await page.waitForSelector(
@@ -100,7 +100,7 @@ Data.findscraping = (newData, result) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         // console.log(res[0].path);
-        var paths = 'file:///'+path.resolve("./") +'/'+newData.path
+        var paths = backend_path+path.resolve("./") +'/'+newData.path
         // console.log(paths);
         await page.goto(paths);
         const textSelector = await page.waitForSelector(
@@ -127,7 +127,7 @@ Data.create = (newData, result) => {
 
 Data.getAll = (status, result) => {
     var list = []
-    let query = "SELECT p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.statusdelete = 1";
+    let query = "SELECT p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1";
     // let query = "SELECT * FROM products WHERE status = 0";
     if (status) {
         query += ` and p.status =  ${status}`;
@@ -163,7 +163,7 @@ Data.getAll = (status, result) => {
 };
 
 Data.findById = (id, result) => {
-    sql.query(`SELECT p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p join category c on p.cat_id = c.id WHERE p.id = ${id} and p.statusdelete = 1`, (err, res) => {
+    sql.query(`SELECT p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.id = ${id} and p.statusdelete = 1`, (err, res) => {
         if (err) {
             result(err, null);
             return;
@@ -178,8 +178,8 @@ Data.findById = (id, result) => {
 
 Data.updatefdastatus = (id, datas, result) => {
     sql.query(
-        "UPDATE products SET statusfda=?,updated_date = ? WHERE id = ?",
-        [datas.statusfda, new Date(), id], (err, res) => {
+        "UPDATE products SET statusfda=?,cat_fda=?,updated_date = ? WHERE id = ?",
+        [datas.statusfda,datas.cat_fda, new Date(), id], (err, res) => {
             if (err) {
                 result(null, err);
                 return;

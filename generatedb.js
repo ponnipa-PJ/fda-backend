@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "fdatypes"
+var table = "database_path"
 var id = 'id'
 var data = [
-    'name'
+    'backend_path','scraping_path'
 ]
 
 
