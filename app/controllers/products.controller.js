@@ -102,8 +102,9 @@ else res.send(data);
 
 exports.findAll = (req, res) => {
 const status = req.query.status;
+const statusdelete = req.query.statusdelete
 // console.log(req.body);
-Data.getAll(status, (err, data) => {
+Data.getAll(status,statusdelete, (err, data) => {
 if (err)
 res.status(500).send({
 message:
@@ -203,12 +204,12 @@ res.send([]);
 };
 
 exports.delete = (req, res) => {
-Data.remove(req.params.id, (err, data) => {
+Data.remove(req.params.id,new Data(req.body), (err, data) => {
 if (err) {
 if (err.kind === "not_found") {
 res.send([])
 }
-} else res.send({ message: `Data was deleted successfully!` });
+} else res.send(data);
 });
 };
 

@@ -125,14 +125,17 @@ Data.create = (newData, result) => {
     });
 }
 
-Data.getAll = (status, result) => {
+Data.getAll = (status,statusdelete, result) => {
     var list = []
-    let query = "SELECT p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1";
+    let query = "SELECT p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
     if (status) {
-        query += ` and p.status =  ${status}`;
+        query += ` WHERE p.statusdelete = 1 and p.status =  ${status}`;
     }
-
+    if (statusdelete) {
+        query += ` WHERE p.statusdelete =  ${statusdelete}`;
+    }
+    query += ` order by p.created_date,p.id desc`;
     console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
@@ -225,9 +228,11 @@ Data.updateById = (id, datas, result) => {
         }
     );
 };
-Data.remove = (id, result) => {
+Data.remove = (id,datas, result) => {
+    console.log(datas);
+    console.log(`UPDATE products SET statusdelete = ${datas.statusdelete} WHERE id = ?`, id);
     sql.query(
-        "UPDATE products SET statusdelete = 0 WHERE id = ?", id, (err, res) => {
+        `UPDATE products SET statusdelete = ${datas.statusdelete} WHERE id = ?`, id, (err, res) => {
             if (err) {
                 result(null, err);
                 return;
