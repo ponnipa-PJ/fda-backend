@@ -118,6 +118,19 @@ else res.send(data);
 });
 };
 
+exports.findGraphTwo = (req, res) => {
+    const status = req.query.status;
+    // console.log(req.body);
+    Data.findGraphTwo(status, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while retrieving table."
+    });
+    else res.send(data);
+    });
+    };
+
 exports.findAll = (req, res) => {
 const status = req.query.status;
 const statusdelete = req.query.statusdelete

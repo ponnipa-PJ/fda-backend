@@ -7,6 +7,8 @@ router.post("/", datas.create);
 
 router.get("/", datas.findAll);
 
+router.get("/findGraphTwo", datas.findGraphTwo);
+
 router.post("/findproductfda", datas.findproductfda);
 
 router.post("/findproduct", datas.findproduct);

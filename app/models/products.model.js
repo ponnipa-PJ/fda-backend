@@ -124,6 +124,52 @@ Data.create = (newData, result) => {
     });
 }
 
+Data.findGraphTwo = (status, result) => {
+    console.log(status);
+    var list = []
+    let query = "SELECT p.created_date,p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
+    // let query = "SELECT * FROM products WHERE status = 0";
+    if (status) {
+        if (status == 1) {
+            query += ` WHERE p.statusdelete = 1 and p.is_fda = true`;
+            
+        }else if (status == 2){
+            query += ` WHERE p.statusdelete = 1 and p.is_cat = true`;
+
+        }else{
+            query += ` WHERE p.statusdelete = 1 and p.is_name = true`;
+        }
+    }
+    query += ` order by p.created_date,p.id desc`;
+    console.log(query);
+    sql.query(query, (err, res) => {
+        for (let r = 0; r < res.length; r++) {
+            if (res[r].status == 1) {
+                axios.get('http://127.0.0.1:5000/base64?id=' + res[r].id).then((im) => {
+                res[r].src = 'data:image/jpeg;base64,'+im.data
+                // console.log('data:image/jpeg;base64,'+im.data);
+                
+              });
+              
+            }
+            if (r+1 == res.length) {
+                list = res
+                // console.log(list);
+            }
+            
+            
+        }
+        if (err) {
+            result(null, err);
+            return;
+        }
+        setTimeout(() => {
+
+            result(null, list);
+        }, 1000);
+    });
+};
+
 Data.getAll = (status,statusdelete,statusfda, result) => {
     console.log(statusfda);
     var list = []

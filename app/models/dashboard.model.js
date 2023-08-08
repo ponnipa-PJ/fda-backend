@@ -1165,35 +1165,48 @@ Data.gettypethree = (name, result) => {
 };
 
 Data.gettypetwo = (name, result) => {
-    // let query = "SELECT * FROM `random` where question_set_id = 6 and status = true order by id LIMIT 5";
-    let query = `SELECT r.type,r.id,r.weight,q.question_name,r.question_set_id,r.question_id,(select l.name from level l where r.level = l.id) as level,(select COUNT(atr.id) from answer_training atr where r.question_id = atr.question_id and r.question_set_id = atr.question_set_id and atr.round is null) as notraing FROM answer_training atr join random r on atr.question_id = r.question_id and atr.question_set_id = r.question_set_id join question_set q on q.id = r.question_set_id where r.status = true and r.type = 2 and atr.round is null GROUP BY r.id order by r.id;`;
+    let query = `SELECT * from products group by statusfda`;
     sql.query(query, (err, res) => {
+    var question =''
         var questionslist = []
-        // console.log(res);
-        let manage_training = `SELECT * FROM manage_training`;
-        sql.query(manage_training, (err, train) => {
-            // console.log(train[0].weight);
-            category = '['
-            data = '['
-            for (let q = 0; q < res.length; q++) {
-                // console.log(train[0].no_train , res[q].notraing)
-                if (train[0].no_train == res[q].notraing) {
-                        question = `SELECT * FROM question_subjecttest s where s.id = ${res[q].question_id}`;
-                    } else if (res[0].type == 2) {
-                        question = `SELECT * FROM question_objectivetest s where s.id = ${res[q].question_id}`;
-                    }
+            for (let q = 0; q < 3; q++) {
+                if (q == 0) {
+                    question = `SELECT * FROM products s where s.is_fda = true`;
+                }else if (q == 1) {
+                    question = `SELECT * FROM products s where s.is_cat = true`;
+                }else if (q == 2) {
+                    question = `SELECT * FROM products s where s.is_name = true`;
+                }
+                // console.log(question);
                     sql.query(question, (err, questions) => {
-                        let ans = `SELECT * FROM answer_training WHERE question_id = ${res[q].question_id} and question_set_id = ${res[q].question_set_id}`
-                        sql.query(ans, (err, countans) => {
+                        var name=''
+                        var id=''
+                        var color=''
+                        if (q == 0) {
+                            name = 'เลขที่อนุญาต ' + questions.length + ' รายการ'
+                            id=1
+                            // color='#00E396'
+
+                        }else if (q == 1) {
+                            name = 'ประเภทผลิตภัณฑ์	 ' + questions.length + ' รายการ'
+                            id=2
+                            // color='#FE2600'
+                        }else{
+                            name = 'ชื่อผลิตภัณฑ์ ' + questions.length + ' รายการ'
+                            id=3
+                            // color='#FEC600'
+                        }
                             questionslist.push({
-                                id: res[q].id,
-                                categories: 'ข้อ ' + res[q].id,
-                                data: countans.length
-                                // data: (countans.length / train[0].no_train) * 100
+                                id: id,
+                                categories: name,
+                                data: questions.length,
+                                color:color
                             })
+                  
                         });
-                    });    }
-        })
+                
+                
+            }
         // console.log(question);
         if (err) {
             result(null, err);
@@ -1203,6 +1216,7 @@ Data.gettypetwo = (name, result) => {
             result(null, questionslist);
         }, 1000);
     });
+
 };
 
 Data.gettypeone = (name, result) => {
