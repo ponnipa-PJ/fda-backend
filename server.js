@@ -120,6 +120,7 @@ require("./app/routes/category.routes")(app);
 require("./app/routes/dicts.routes")(app);
 require("./app/routes/fdatypes.routes")(app);
 require("./app/routes/database_path.routes")(app);
+require("./app/routes/dashboard.routes")(app);
 
 app.listen(PORT, () => {
   //console.log(`Server is running on port ${PORT}.`);

@@ -6,7 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;
+    this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;this.is_fda=datas.is_fda;this.is_cat=datas.is_cat;this.is_name=datas.is_name;
 };
 
 Data.findproduct = async (newData, result) => {
@@ -15,29 +15,28 @@ Data.findproduct = async (newData, result) => {
     console.log(query);
     sql.query(query, async (err, res) => {
         console.log(res);
-//         await axios.get('http://127.0.0.1:5000/worktoken?text=' + res[0].content).then((token) => {
-if (res) {
-    list.push({
-        id:res[0].id,
-        path:res[0].path,
-        image_path:res[0].image_path,
-        url:res[0].url,
-        content:res[0].content,
-        status:res[0].status,
-        created_date:res[0].created_date,
-        updated_date:res[0].updated_date,
-        name:res[0].name,
-        // token:token.data
-        // });
-        })
-}
-
         if (err) {
             result(null, err);
             return;
         }
         result(null, res);
     });
+}
+
+Data.findproductfda = async (newData, result) => {
+    var list = []
+let query = `SELECT p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.fda = '${newData.fda}'`;
+console.log(query);
+sql.query(query, async (err, res) => {
+console.log(res);
+
+
+if (err) {
+    result(null, err);
+    return;
+}
+result(null, res);
+});
 }
 
 Data.saveimageproduct = (newData, result) => {
@@ -125,15 +124,25 @@ Data.create = (newData, result) => {
     });
 }
 
-Data.getAll = (status,statusdelete, result) => {
+Data.getAll = (status,statusdelete,statusfda, result) => {
+    console.log(statusfda);
     var list = []
-    let query = "SELECT p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
+    let query = "SELECT p.created_date,p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
     if (status) {
         query += ` WHERE p.statusdelete = 1 and p.status =  ${status}`;
     }
     if (statusdelete) {
         query += ` WHERE p.statusdelete =  ${statusdelete}`;
+    }
+    if (statusfda) {
+        if (statusfda == 3) {
+            query += ` WHERE p.statusdelete = 1 and p.statusfda is null`;
+            
+        }else{
+            query += ` WHERE p.statusdelete = 1 and p.statusfda = ${statusfda}`;
+
+        }
     }
     query += ` order by p.created_date,p.id desc`;
     console.log(query);
@@ -181,8 +190,8 @@ Data.findById = (id, result) => {
 
 Data.updatefdastatus = (id, datas, result) => {
     sql.query(
-        "UPDATE products SET statusfda=?,cat_fda=?,updated_date = ? WHERE id = ?",
-        [datas.statusfda,datas.cat_fda, new Date(), id], (err, res) => {
+        "UPDATE products SET is_fda=?,is_cat=?,is_name=?,statusfda=?,cat_fda=?,updated_date = ? WHERE id = ?",
+        [datas.is_fda,datas.is_cat,datas.is_name,datas.statusfda,datas.cat_fda, new Date(), id], (err, res) => {
             if (err) {
                 result(null, err);
                 return;

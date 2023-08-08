@@ -79,7 +79,25 @@ exports.findproduct = (req, res) => {
     else res.send(data);
     });
     };
-
+    exports.findproductfda = (req, res) => {
+        if (!req.body) {
+        res.status(400).send({
+        message: 'Content can not be empty!'
+        });
+        }
+        
+        const datas = new Data({
+            fda:req.body.fda,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:req.body.updated_date,});
+        Data.findproductfda(datas, (err, data) => {
+        if (err)
+        res.status(500).send({
+        message:
+        err.message || "Some error occurred while creating the Tutorial."
+        });
+        else res.send(data);
+        });
+        };
+    
 exports.create = (req, res) => {
 if (!req.body) {
 res.status(400).send({
@@ -88,7 +106,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-    cat_fda:req.body.cat_fda,statusfda:req.body.statusfda,fda:req.body.fda,statusdelete:req.body.statusdelete,cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),});
+    cat_fda:req.body.cat_fda,statusfda:req.body.statusfda,fda:req.body.fda,statusdelete:req.body.statusdelete,cat_id:req.body.cat_id,image_path:req.body.image_path,file:req.body.file,path:req.body.path,url:req.body.url,content:req.body.content,status:req.body.status,updated_date:new Date(),is_fda:req.body.is_fda,is_cat:req.body.is_cat,is_name:req.body.is_name});
 console.log(datas);
     Data.create(datas, (err, data) => {
 if (err)
@@ -103,8 +121,9 @@ else res.send(data);
 exports.findAll = (req, res) => {
 const status = req.query.status;
 const statusdelete = req.query.statusdelete
+const statusfda = req.query.statusfda
 // console.log(req.body);
-Data.getAll(status,statusdelete, (err, data) => {
+Data.getAll(status,statusdelete,statusfda, (err, data) => {
 if (err)
 res.status(500).send({
 message:
