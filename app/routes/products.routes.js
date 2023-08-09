@@ -9,6 +9,8 @@ router.get("/", datas.findAll);
 
 router.get("/findGraphTwo", datas.findGraphTwo);
 
+router.get("/findGraphOne", datas.findGraphOne);
+
 router.post("/findproductfda", datas.findproductfda);
 
 router.post("/findproduct", datas.findproduct);

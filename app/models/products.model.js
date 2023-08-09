@@ -124,20 +124,81 @@ Data.create = (newData, result) => {
     });
 }
 
+Data.findGraphOne = (status, result) => {
+    var list = []
+    let query = `SELECT * from products`;
+    sql.query(query, (err, res) => {
+        var count1=0
+        var count2=0
+        var count3=0
+        var list1 = []
+        var list2 = []
+        var list3 = []
+            for (let q = 0; q < res.length; q++) {
+                if (res[q].is_fda == 1 && res[q].is_cat == 1 && res[q].is_name == 1) {
+                    count1 = count1+1
+                    list1.push(res[q])
+                }else if(res[q].is_fda == null && res[q].is_cat == null && res[q].is_name == null){
+                    count3 = count2+1
+                    list3.push(res[q])
+                }else{
+                    count2 = count3+1
+                    list2.push(res[q])
+                }
+            }
+            if (status == 1) {
+                data = list1
+            }else if (status == 2) {
+                data = list2
+            }else if (status == 3) {
+                data = list3
+            }
+        for (let r = 0; r < data.length; r++) {
+            if (data[r].status == 1) {
+                axios.get('http://127.0.0.1:5000/base64?id=' + data[r].id).then((im) => {
+                    data[r].src = 'data:image/jpeg;base64,'+im.data
+                // console.log('data:image/jpeg;base64,'+im.data);
+                
+              });
+              
+            }
+            if (r+1 == data.length) {
+                list = data
+                // console.log(list);
+            }
+            
+        }
+        if (err) {
+            result(null, err);
+            return;
+        }
+        setTimeout(() => {
+            result(null, list);
+        }, 1000);
+    });
+};
+
 Data.findGraphTwo = (status, result) => {
-    console.log(status);
+    // console.log(status);
     var list = []
     let query = "SELECT p.created_date,p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
     if (status) {
+        // console.log(status);
         if (status == 1) {
-            query += ` WHERE p.statusdelete = 1 and p.is_fda = true`;
-            
-        }else if (status == 2){
-            query += ` WHERE p.statusdelete = 1 and p.is_cat = true`;
-
-        }else{
-            query += ` WHERE p.statusdelete = 1 and p.is_name = true`;
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_fda = false and p.is_cat = true and p.is_name = true)`;
+        }else if (status == 2) {
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_fda = true and p.is_cat = false and p.is_name = true)`;
+        }else if (status == 3) {
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_fda = true and p.is_cat = true and p.is_name = false)`;
+        }else if (status == 4) {
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_fda = false and p.is_cat = false and p.is_name = true)`;
+        }else if (status == 5) {
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_fda = false and p.is_cat = true and p.is_name = false)`;
+        }else if (status == 6) {
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_fda = true and p.is_cat = false and p.is_name = false)`;
+        }else if (status == 7) {
+            query += ` where p.statusdelete = true and p.statusfda = false and (p.is_cat = false and p.is_name = false and p.is_fda = false)`;
         }
     }
     query += ` order by p.created_date,p.id desc`;
@@ -180,15 +241,6 @@ Data.getAll = (status,statusdelete,statusfda, result) => {
     }
     if (statusdelete) {
         query += ` WHERE p.statusdelete =  ${statusdelete}`;
-    }
-    if (statusfda) {
-        if (statusfda == 3) {
-            query += ` WHERE p.statusdelete = 1 and p.statusfda is null`;
-            
-        }else{
-            query += ` WHERE p.statusdelete = 1 and p.statusfda = ${statusfda}`;
-
-        }
     }
     query += ` order by p.created_date,p.id desc`;
     console.log(query);

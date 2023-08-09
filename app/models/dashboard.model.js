@@ -1165,19 +1165,28 @@ Data.gettypethree = (name, result) => {
 };
 
 Data.gettypetwo = (name, result) => {
-    let query = `SELECT * from products group by statusfda`;
+    let query = `SELECT * from products s where s.statusdelete = true and statusfda = false`;
     sql.query(query, (err, res) => {
     var question =''
         var questionslist = []
-            for (let q = 0; q < 3; q++) {
+            for (let q = 0; q < 7; q++) {
                 if (q == 0) {
-                    question = `SELECT * FROM products s where s.is_fda = true`;
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = false and s.is_cat = true and s.is_name = true);`;
                 }else if (q == 1) {
-                    question = `SELECT * FROM products s where s.is_cat = true`;
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = true and s.is_cat = false and s.is_name = true);`;
                 }else if (q == 2) {
-                    question = `SELECT * FROM products s where s.is_name = true`;
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = true and s.is_cat = true and s.is_name = false);`;
+                }else if (q == 3) {
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = false and s.is_cat = false and s.is_name = true)`;
+                }else if (q == 4) {
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = false and s.is_cat = true and s.is_name = false)`;
+                }else if (q == 5) {
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = true and s.is_cat = false and s.is_name = false)`;
                 }
-                // console.log(question);
+                else if (q == 6) {
+                    question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = false and s.is_cat = false and s.is_name = false)`;
+                }
+                console.log(question);
                     sql.query(question, (err, questions) => {
                         var name=''
                         var id=''
@@ -1191,9 +1200,26 @@ Data.gettypetwo = (name, result) => {
                             name = 'ประเภทผลิตภัณฑ์	 ' + questions.length + ' รายการ'
                             id=2
                             // color='#FE2600'
-                        }else{
+                        }else if (q == 2) {
                             name = 'ชื่อผลิตภัณฑ์ ' + questions.length + ' รายการ'
                             id=3
+                            // color='#FEC600'
+                        }else if (q == 3) {
+                            name = 'เลขที่อนุญาตและประเภทผลิตภัณฑ์ ' + questions.length + ' รายการ'
+                            id=4
+                            // color='#FEC600'
+                        }else if (q == 4) {
+                            name = 'เลขที่อนุญาตและชื่อผลิตภัณฑ์ ' + questions.length + ' รายการ'
+                            id=5
+                            // color='#FEC600'
+                        }else if (q == 5) {
+                            name = 'ประเภทผลิตภัณฑ์และชื่อผลิตภัณฑ์ ' + questions.length + ' รายการ'
+                            id=6
+                            // color='#FEC600'
+                        }
+                        else if (q == 6) {
+                            name = 'ทั้ง 3 เงื่อนไข ' + questions.length + ' รายการ'
+                            id=7
                             // color='#FEC600'
                         }
                             questionslist.push({
@@ -1207,7 +1233,7 @@ Data.gettypetwo = (name, result) => {
                 
                 
             }
-        // console.log(question);
+            
         if (err) {
             result(null, err);
             return;
@@ -1219,51 +1245,185 @@ Data.gettypetwo = (name, result) => {
 
 };
 
+// Data.gettypetwo = (status, result) => {
+//     var list = []
+//     let query = `SELECT * from products`;
+//     sql.query(query, (err, res) => {
+//         var count1=0
+//         var count2=0
+//         var count3=0
+//         var list1 = []
+//         var list2 = []
+//         var list3 = []
+//             for (let q = 0; q < res.length; q++) {
+//                 if (res[q].is_fda == 1 && res[q].is_cat == 1 && res[q].is_name == 1) {
+//                     count1 = count1+1
+//                     list1.push(res[q])
+//                 }else if(res[q].is_fda == null && res[q].is_cat == null && res[q].is_name == null){
+//                     count3 = count3+1
+//                     list3.push(res[q])
+//                 }else{
+//                     count2 = count2+1
+//                     list2.push(res[q])
+//                 }
+//             }
+//             var counttype1 = 0
+//             var counttype2 = 0
+//             var counttype3 = 0
+//             var counttype4 = 0
+//             var counttype5 = 0
+//             var counttype6 = 0
+//             console.log(list2.length);
+//         for (let r = 0; r < list2.length; r++) {
+//             console.log(list2[r].id);
+//             if (list2[r].is_fda == 0 && list2[r].is_cat == 1 && res[r].is_name == 1) {
+//                 counttype1 = counttype1+1
+//             }else if (list2[r].is_fda == 1 && list2[r].is_cat == 0 && res[r].is_name == 1) {
+//                 counttype2 = counttype2+1
+//             }else if (list2[r].is_fda == 1 && list2[r].is_cat ==1 && res[r].is_name == 0) {
+//                 counttype3 = counttype3+1
+//             }else if (list2[r].is_fda == 1 && list2[r].is_cat == 1 && res[r].is_name == 0) {
+//                 counttype4 = counttype4+1
+//             }else if (list2[r].is_fda == 1 && list2[r].is_cat == 0 && res[r].is_name == 1) {
+//                 counttype5 = counttype5+1
+//             }else if (list2[r].is_fda == 0 && list2[r].is_cat == 1 && res[r].is_name == 1) {
+//                 counttype6 = counttype6+1
+//             }else{
+//                 counttype6 = counttype6+1
+//             }
+//         }
+
+//         console.log(counttype1);
+//         console.log(counttype2);
+//         console.log(counttype3);
+//         console.log(counttype4);
+//         console.log(counttype5);
+//         console.log(counttype6);
+//         for (let q = 0; q < 6; q++) {
+//             if (q == 0) {
+//                 list.push({
+//                     id: 1,
+//                     categories: 'เลขที่อนุญาต ' + counttype1 + ' รายการ',
+//                     data: counttype1,
+//                 })
+//                                         }else if (q == 1) {
+//                                             list.push({
+//                                                 id: 2,
+//                                                 categories: 'ประเภทผลิตภัณฑ์ ' + counttype2 + ' รายการ',
+//                                                 data: counttype2,
+//                                             })
+//                                         }else if (q == 2) {
+//                                             list.push({
+//                                                 id: 2,
+//                                                 categories: 'ชื่อผลิตภัณฑ์ ' + counttype3 + ' รายการ',
+//                                                 data: counttype3,
+//                                             })
+//                                         }else if (q == 3) {
+//                                             list.push({
+//                                                 id: 2,
+//                                                 categories: 'เลขที่อนุญาตและประเภทผลิตภัณฑ์ ' + counttype4 + ' รายการ',
+//                                                 data: counttype3,
+//                                             })
+//                                         }else if (q == 4) {
+//                                             list.push({
+//                                                 id: 2,
+//                                                 categories: 'เลขที่อนุญาตและชื่อผลิตภัณฑ์ ' + counttype5 + ' รายการ',
+//                                                 data: counttype5,
+//                                             })
+//                                         }else if (q == 5) {
+//                                             list.push({
+//                                                 id: 2,
+//                                                 categories: 'ประเภทผลิตภัณฑ์และชื่อผลิตภัณฑ์ ' + counttype6 + ' รายการ',
+//                                                 data: counttype5,
+//                                             })
+//                                         }
+            
+//         }
+//         if (err) {
+//             result(null, err);
+//             return;
+//         }
+//         setTimeout(() => {
+//             result(null, list);
+//         }, 500);
+//     });
+// };
+
 Data.gettypeone = (name, result) => {
     // let query = "SELECT * FROM `random` where question_set_id = 6 and status = true order by id LIMIT 5";
-    let query = `SELECT * from products group by statusfda`;
+    let query = `SELECT * from products`;
     sql.query(query, (err, res) => {
         var questionslist = []
+        var count1=0
+        var count2=0
+        var count3=0
             for (let q = 0; q < res.length; q++) {
-                if (res[q].statusfda !== null) {
-                    question = `SELECT * FROM products s where s.statusfda = ${res[q].statusfda}`;
+                if (res[q].is_fda == 1 && res[q].is_cat == 1 && res[q].is_name == 1) {
+                    count1 = count1+1
+                }else if(res[q].is_fda == null && res[q].is_cat == null && res[q].is_name == null){
+                    count3 = count3+1
+                }else{
+                    count2 = count2+1
                 }
-                else{
-                    question = `SELECT * FROM products s where s.statusfda is null`;
-
-                }
-                    sql.query(question, (err, questions) => {
-                        var name=''
-                        var id=''
-                        var color=''
-                        if (res[q].statusfda == 1) {
-                            name = 'ผ่านการตรวจสอบ ' + questions.length + ' รายการ'
-                            id=res[q].statusfda
-                            color='#00E396'
-
-                        }else if (res[q].statusfda == 0) {
-                            name = 'ไม่ผ่านการตรวจสอบ ' + questions.length + ' รายการ'
-                            id=res[q].statusfda
-                            color='#FE2600'
-                        }else{
-                            name = 'ไม่สามารถตรวจสอบได้ ' + questions.length + ' รายการ'
-                            id=3
-                            color='#FEC600'
-                        }
-                        // else{
-                        //     name = 'ไม่ได้ตรวจสอบ'
-                        // }
-                            questionslist.push({
-                                id: id,
-                                categories: name,
-                                data: questions.length,
-                                color:color
-                                // data: (countans.length / train[0].no_train) * 100
-                            })
-                    });
-                
-                
             }
+                questionslist.push({
+                    id: 1,
+                    categories: 'ผ่านการตรวจสอบตามเงื่อนไข',
+                    data: count1,
+                    color:'#00E396'
+                },
+                {
+                    id: 2,
+                    categories: 'ไม่ผ่านการตรวจสอบตามเงื่อนไข',
+                    data: count2,
+                    color:'#FE2600'
+                },
+                {
+                    id: 3,
+                    categories: 'ไม่มีหมายเลขอย.',
+                    data: count3,
+                    color:'#FEC600'
+                })
+            // for (let q = 0; q < 3; q++) {
+            //     if (q == 0) {
+            //         question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = false and s.is_cat = true and s.is_name = true);`;
+            //     }else if (q == 1) {
+            //         question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = true and s.is_cat = false and s.is_name = true);`;
+            //     }else if (q == 2) {
+            //         question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = true and s.is_cat = true and s.is_name = false);`;
+            //     }
+            //         sql.query(question, (err, questions) => {
+            //             var name=''
+            //             var id=''
+            //             var color=''
+            //             if (q == 0) {
+            //                 name = 'ผ่านการตรวจสอบ ' + questions.length + ' รายการ'
+            //                 id=res[q].statusfda
+            //                 color='#00E396'
+
+            //             }else if (q == 1) {
+            //                 name = 'ไม่ผ่านการตรวจสอบ ' + questions.length + ' รายการ'
+            //                 id=res[q].statusfda
+            //                 color='#FE2600'
+            //             }else{
+            //                 name = 'ไม่มีหมายเลขอย. ' + questions.length + ' รายการ'
+            //                 id=3
+            //                 color='#FEC600'
+            //             }
+            //             // else{
+            //             //     name = 'ไม่ได้ตรวจสอบ'
+            //             // }
+            //                 questionslist.push({
+            //                     id: id,
+            //                     categories: name,
+            //                     data: questions.length,
+            //                     color:color
+            //                     // data: (countans.length / train[0].no_train) * 100
+            //                 })
+            //         });
+                
+                
+            // }
         // console.log(question);
         if (err) {
             result(null, err);
