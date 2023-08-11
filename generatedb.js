@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "database_path"
+var table = "keywords"
 var id = 'id'
 var data = [
-    'backend_path','scraping_path'
+    'name','token','status'
 ]
 
 
