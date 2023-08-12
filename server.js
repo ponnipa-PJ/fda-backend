@@ -122,6 +122,7 @@ require("./app/routes/fdatypes.routes")(app);
 require("./app/routes/database_path.routes")(app);
 require("./app/routes/dashboard.routes")(app);
 require("./app/routes/keywords.routes")(app);
+require("./app/routes/keyword_dicts.routes")(app);
 
 app.listen(PORT, () => {
   //console.log(`Server is running on port ${PORT}.`);
