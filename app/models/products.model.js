@@ -25,7 +25,7 @@ Data.findproduct = async (newData, result) => {
 
 Data.findproductfda = async (newData, result) => {
     var list = []
-let query = `SELECT p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.fda = '${newData.fda}'`;
+let query = `SELECT p.statusfda as status,p.is_fda,p.is_cat,p.is_name,p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.fda = ${newData.fda}`;
 console.log(query);
 sql.query(query, async (err, res) => {
 console.log(res);
@@ -242,7 +242,7 @@ Data.getAll = (status,statusdelete,statusfda, result) => {
     if (statusdelete) {
         query += ` WHERE p.statusdelete =  ${statusdelete}`;
     }
-    query += ` order by p.created_date,p.id desc`;
+    query += ` order by p.id desc`;
     console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
