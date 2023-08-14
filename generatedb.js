@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "keyword_dicts"
+var table = "token_setting"
 var id = 'id'
 var data = [
-    'name','status'
+    'back_space'
 ]
 
 
