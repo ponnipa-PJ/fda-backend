@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "token_setting"
+var table = "rule_based"
 var id = 'id'
 var data = [
-    'back_space'
+    'answer'
 ]
 
 
