@@ -13,11 +13,15 @@ result(null, { id: res.insertId, ...newData });
 });
 }
 
-Data.getAll = (status, result) => {
+Data.getAll = (status,name, result) => {
 let query = "SELECT * FROM dicts";
 if (status) {
 query += ` WHERE status = ${status}`;
 }
+if (name) {
+    query += ` WHERE name = '${name}'`;
+    }
+    console.log(query);
 sql.query(query, (err, res) => {
 if (err) {
 result(null, err);

@@ -1,4 +1,4 @@
-const Data = require("../models/dicts.model.js");
+const Data = require("../models/map_rule_based.model.js");
 
 exports.create = (req, res) => {
 if (!req.body) {
@@ -8,7 +8,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-name:req.body.name,status:req.body.status,});
+rule_based_id:req.body.rule_based_id,dict_id:req.body.dict_id,});
 Data.create(datas, (err, data) => {
 if (err)
 res.status(500).send({
@@ -20,10 +20,8 @@ else res.send(data);
 };
 
 exports.findAll = (req, res) => {
-const status = req.query.status;
 const name = req.query.name;
-
-Data.getAll(status,name, (err, data) => {
+Data.getAll(name, (err, data) => {
 if (err)
 res.status(500).send({
 message:

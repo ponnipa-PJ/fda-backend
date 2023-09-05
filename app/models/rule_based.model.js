@@ -38,6 +38,19 @@ Data.getcolumn = (name, result) => {
     result(null, res);
     });
     };
+    
+    Data.getbydict = (name, result) => {
+        let query = name
+        console.log(query);
+        sql.query(query, (err, res) => {
+        if (err) {
+        result(null, err);
+        return;
+        }
+        result(null, res);
+        });
+        };
+
 Data.getAll = (name, result) => {
 let query = "SELECT * FROM rule_based";
 if (name) {
@@ -66,9 +79,10 @@ result({ kind: "not_found" }, null);
 };
 
 Data.updateById = (id, datas, result) => {
+    console.log(datas.datas);
 sql.query(
 "UPDATE rule_based SET answer = ? WHERE id = ?",
-[datas.answer,id],(err, res) => {
+[datas.datas.answer,id],(err, res) => {
 if (err) {
 result(null, err);
 return;

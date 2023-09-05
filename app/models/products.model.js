@@ -6,7 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;this.is_fda=datas.is_fda;this.is_cat=datas.is_cat;this.is_name=datas.is_name;
+    this.map_rule_based=datas.map_rule_based,this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;this.is_fda=datas.is_fda;this.is_cat=datas.is_cat;this.is_name=datas.is_name;
 };
 
 Data.findproduct = async (newData, result) => {
@@ -127,6 +127,7 @@ Data.create = (newData, result) => {
 Data.findGraphOne = (status, result) => {
     var list = []
     let query = `SELECT * from products`;
+    query += ` order by id desc`;
     sql.query(query, (err, res) => {
         var count1=0
         var count2=0
@@ -201,7 +202,7 @@ Data.findGraphTwo = (status, result) => {
             query += ` where p.statusdelete = true and p.statusfda = false and (p.is_cat = false and p.is_name = false and p.is_fda = false)`;
         }
     }
-    query += ` order by p.created_date,p.id desc`;
+    query += ` order by p.id desc`;
     console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
@@ -230,6 +231,73 @@ Data.findGraphTwo = (status, result) => {
         }, 1000);
     });
 };
+
+function finddescription(data){
+    // console.log(data);
+    var text = ['รายละเอียด']
+    var findfda = data
+    for (let t = 0; t < text.length; t++) {
+      if (findfda.indexOf(text[t]) != -1) {
+
+        findfda = findfda.substring(findfda.indexOf(text[t]));  
+      }
+
+    }
+    // if (findfda == 'อาหาร') {
+    //   findfda = findfda+ findfda+'เสริม'
+    // }
+    // console.log(findfda);
+    return findfda
+  }
+
+Data.getproductkeyword = (status, result) => {
+    var list = []
+    let query = "SELECT p.*,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
+    // let query = "SELECT * FROM products WHERE status = 0";
+    if (status) {
+        query += ` WHERE p.statusdelete = 1 and p.status =  1`;
+    }
+    query += ` and p.id = 17 order by p.id asc `;
+    console.log(query);
+    sql.query(query, (err, res) => {
+        for (let r = 0; r < res.length; r++) {
+            res[r].content = res[r].content.replaceAll(/([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])/g, '')
+                res[r].content = res[r].content.replaceAll(/(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g, '');
+                res[r].content = res[r].content.replaceAll(/(\r\n|\n|\r)/gm, "");
+                res[r].content = res[r].content.replaceAll("_", "");
+                res[r].content = res[r].content.replaceAll("!", "");
+                res[r].content = res[r].content.replaceAll("*", "");
+                res[r].content = res[r].content.replaceAll("#", "");
+            res[r].desc = finddescription(res[r].content)
+        //     axios.get('http://127.0.0.1:5000/worktokendesc?text='+con).then((desc) => {
+        // // console.log(desc.data);
+        // res[r].desc = desc.data
+        if (r+1 == res.length) {
+            list = res
+            // console.log(list);
+        }
+    //   });
+        //     axios.get('http://127.0.0.1:5000/checkkeyword?name=' + res[r].desc).then((desc) => {
+        //     // console.log(desc.data);
+        //     // if (desc.length > 0) {
+        //       res[r].keyword =  desc.data
+        //     // }
+            
+        // });
+            
+        
+        }
+        if (err) {
+            result(null, err);
+            return;
+        }
+        setTimeout(() => {
+
+            result(null, list);
+        }, 1000);
+    });
+};
+
 
 Data.getAll = (status,statusdelete,statusfda, result) => {
     console.log(statusfda);
@@ -284,6 +352,23 @@ Data.findById = (id, result) => {
         }
         result({ kind: "not_found" }, null);
     });
+};
+
+Data.map_rule_based = (id, datas, result) => {
+    console.log(datas);
+    sql.query(
+        "UPDATE products SET map_rule_based=? WHERE id = ?",
+        [datas.map_rule_based, id], (err, res) => {
+            if (err) {
+                result(null, err);
+                return;
+            }
+            if (res.affectedRows == 0) {
+                result({ kind: "not_found" }, null);
+                return;
+            }; result(null, { id: id, ...datas });
+        }
+    );
 };
 
 Data.updatefdastatus = (id, datas, result) => {

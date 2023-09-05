@@ -125,6 +125,7 @@ require("./app/routes/keywords.routes")(app);
 require("./app/routes/keyword_dicts.routes")(app);
 require("./app/routes/token_setting.routes")(app);
 require("./app/routes/rule_based.routes")(app);
+require("./app/routes/map_rule_based.routes")(app);
 
 app.listen(PORT, () => {
   //console.log(`Server is running on port ${PORT}.`);

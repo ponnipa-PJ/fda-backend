@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "rule_based"
+var table = "map_rule_based"
 var id = 'id'
 var data = [
-    'answer'
+    'rule_based_id','dict_id'
 ]
 
 
