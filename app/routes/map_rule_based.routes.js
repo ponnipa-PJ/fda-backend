@@ -11,7 +11,7 @@ router.get("/:id", datas.findOne);
 
 router.put("/:id", datas.update);
 
-router.delete("/:id", datas.delete);
+router.put("/updatestatus/:id", datas.delete);
 
 router.delete("/", datas.deleteAll);
 

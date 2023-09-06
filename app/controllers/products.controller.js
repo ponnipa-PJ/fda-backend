@@ -151,9 +151,10 @@ exports.findGraphTwo = (req, res) => {
 };
 
 exports.getproductkeyword = (req, res) => {
-    const status = req.query.status;
+    const start = req.query.start;
+    const end = req.query.end;
     // console.log(req.body);
-    Data.getproductkeyword(status, (err, data) => {
+    Data.getproductkeyword(start,end, (err, data) => {
         if (err)
             res.status(500).send({
                 message:

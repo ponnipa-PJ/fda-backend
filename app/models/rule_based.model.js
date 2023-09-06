@@ -39,6 +39,17 @@ Data.getcolumn = (name, result) => {
     });
     };
     
+    Data.getbymap = (name, result) => {
+        let query = name
+        console.log(query);
+        sql.query(query, (err, res) => {
+        if (err) {
+        result(null, err);
+        return;
+        }
+        result(null, res);
+        });
+        };
     Data.getbydict = (name, result) => {
         let query = name
         console.log(query);

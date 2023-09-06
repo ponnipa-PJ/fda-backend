@@ -156,7 +156,7 @@ Data.findGraphOne = (status, result) => {
             }
         for (let r = 0; r < data.length; r++) {
             if (data[r].status == 1) {
-                axios.get('http://127.0.0.1:5000/base64?id=' + data[r].id).then((im) => {
+                axios.get('https://resful-deep.onrender.com/base64?id=' + data[r].id).then((im) => {
                     data[r].src = 'data:image/jpeg;base64,'+im.data
                 // console.log('data:image/jpeg;base64,'+im.data);
                 
@@ -207,7 +207,7 @@ Data.findGraphTwo = (status, result) => {
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
-                axios.get('http://127.0.0.1:5000/base64?id=' + res[r].id).then((im) => {
+                axios.get('https://resful-deep.onrender.com/base64?id=' + res[r].id).then((im) => {
                 res[r].src = 'data:image/jpeg;base64,'+im.data
                 // console.log('data:image/jpeg;base64,'+im.data);
                 
@@ -250,14 +250,14 @@ function finddescription(data){
     return findfda
   }
 
-Data.getproductkeyword = (status, result) => {
+Data.getproductkeyword = (start,end, result) => {
     var list = []
     let query = "SELECT p.*,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
-    if (status) {
-        query += ` WHERE p.statusdelete = 1 and p.status =  1`;
-    }
-    query += ` and p.id = 17 order by p.id asc `;
+        // query += ` WHERE p.statusdelete = 1 and p.status =  1 and (p.id >= ${start} and p.id <=${end})`;
+        // query += ` WHERE p.statusdelete = 1 and p.status =  1 and (p.id >= 7 and p.id <=9)`;
+        query += ` WHERE p.statusdelete = 1 and p.status =  1 and p.id = ${start}`;
+    query += ` order by p.id`;
     console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
@@ -269,15 +269,15 @@ Data.getproductkeyword = (status, result) => {
                 res[r].content = res[r].content.replaceAll("*", "");
                 res[r].content = res[r].content.replaceAll("#", "");
             res[r].desc = finddescription(res[r].content)
-        //     axios.get('http://127.0.0.1:5000/worktokendesc?text='+con).then((desc) => {
-        // // console.log(desc.data);
-        // res[r].desc = desc.data
+            // axios.get('https://resful-deep.onrender.com/worktokendesc?text='+res[r].desc).then((desc) => {
+        // console.log(desc.data);
+        // res[r].desctxt = desc.data
         if (r+1 == res.length) {
             list = res
             // console.log(list);
         }
     //   });
-        //     axios.get('http://127.0.0.1:5000/checkkeyword?name=' + res[r].desc).then((desc) => {
+        //     axios.get('https://resful-deep.onrender.com/checkkeyword?name=' + res[r].desc).then((desc) => {
         //     // console.log(desc.data);
         //     // if (desc.length > 0) {
         //       res[r].keyword =  desc.data
@@ -315,7 +315,7 @@ Data.getAll = (status,statusdelete,statusfda, result) => {
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
-                axios.get('http://127.0.0.1:5000/base64?id=' + res[r].id).then((im) => {
+                axios.get('https://resful-deep.onrender.com/base64?id=' + res[r].id).then((im) => {
                 res[r].src = 'data:image/jpeg;base64,'+im.data
                 // console.log('data:image/jpeg;base64,'+im.data);
                 

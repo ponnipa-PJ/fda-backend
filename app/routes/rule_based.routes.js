@@ -13,6 +13,8 @@ router.get("/", datas.findAll);
 
 router.get("/getbydict", datas.getbydict);
 
+router.get("/getbymap", datas.getbymap);
+
 router.get("/:id", datas.findOne);
 
 router.put("/:id", datas.update);

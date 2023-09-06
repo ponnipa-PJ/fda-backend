@@ -9,8 +9,11 @@ if (err) {
 result(err, null);
 return;
 }
+let rule = `ALTER TABLE rule_based ADD dict${res.insertId} int(11) NOT NULL DEFAULT(0)`;
+sql.query(rule, (err, rules) => {
 result(null, { id: res.insertId, ...newData });
 });
+})
 }
 
 Data.getAll = (status,name, result) => {
@@ -21,7 +24,7 @@ query += ` WHERE status = ${status}`;
 if (name) {
     query += ` WHERE name = '${name}'`;
     }
-    console.log(query);
+    // console.log(query);
 sql.query(query, (err, res) => {
 if (err) {
 result(null, err);

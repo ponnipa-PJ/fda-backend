@@ -1,10 +1,12 @@
 const sql = require("./db");
 
 const Data = function (datas) {
+    this.status=datas.status;
 this.rule_based_id=datas.rule_based_id;this.dict_id=datas.dict_id;};
 Data.create = (newData, result) => {
     // console.log(newData.dict_id);
     var data = {
+        status:newData.status,
         rule_based_id:newData.rule_based_id,
         dict_id:JSON.stringify(newData.dict_id),
     }
@@ -22,7 +24,7 @@ result(null, { id: res.insertId, ...newData });
 Data.getAll = (name, result) => {
     var list= []
     var dict_name =[]
-let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id";
+let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }
@@ -94,20 +96,22 @@ return;
 }
 );
 };
-Data.remove = (id, result) => {
-sql.query(
-"DELETE FROM map_rule_based  WHERE id = ?",id, (err, res) => {
-if (err) {
-result(null, err);
-return;
-}
-if (res.affectedRows == 0) {
-result({ kind: "not_found" }, null);
-return;
-}
-result(null, res);
-});
-};
+Data.remove = (id, datas, result) => {
+    console.log(datas);
+    sql.query(
+    "UPDATE map_rule_based SET status = ? WHERE id = ?",
+    [datas.status,id],(err, res) => {
+    if (err) {
+    result(null, err);
+    return;
+    }
+    if (res.affectedRows == 0) {
+    result({ kind: "not_found" }, null);
+    return;
+    };result(null, { id: id, ...datas });
+    }
+    );
+    };
 
 Data.removeAll = result => {
 sql.query("DELETE FROM map_rule_based", (err, res) => {
