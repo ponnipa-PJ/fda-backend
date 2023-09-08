@@ -7,6 +7,8 @@ router.post("/", datas.create);
 
 router.get("/", datas.findAll);
 
+router.get("/getdecision", datas.getdecision);
+
 router.get("/getproductkeyword", datas.getproductkeyword);
 
 router.get("/findGraphTwo", datas.findGraphTwo);
@@ -31,7 +33,7 @@ router.put("/updatescraping/:id", datas.updatescraping);
 
 router.put("/updatefdastatus/:id", datas.updatefdastatus);
 
-router.put("/map_rule_based/:id", datas.map_rule_based);
+router.put("/sentent_keyword/:id", datas.sentent_keyword);
 
 
 router.put("/updatedeletestatus/:id", datas.delete);

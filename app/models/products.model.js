@@ -6,7 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const Data = function (datas) {
-    this.map_rule_based=datas.map_rule_based,this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;this.is_fda=datas.is_fda;this.is_cat=datas.is_cat;this.is_name=datas.is_name;
+    this.sentent_keyword=datas.sentent_keyword,this.cat_fda=datas.cat_fda,this.statusfda=datas.statusfda,this.fda=datas.fda,this.statusdelete=datas.statusdelete,this.image_path=datas.image_path,this.file=datas.file,this.cat_id=datas.cat_id,this.name=datas.name,this.path = datas.path; this.url = datas.url; this.content = datas.content; this.status = datas.status; this.updated_date = datas.updated_date;this.is_fda=datas.is_fda;this.is_cat=datas.is_cat;this.is_name=datas.is_name;
 };
 
 Data.findproduct = async (newData, result) => {
@@ -298,6 +298,44 @@ Data.getproductkeyword = (start,end, result) => {
     });
 };
 
+Data.getdecision = (status, result) => {
+    var list = []
+    let query = "SELECT * FROM products";
+    // let query = "SELECT * FROM products WHERE status = 0";
+    if (status) {
+        query += ` WHERE statusdelete = 1 and status =  1`;
+    }
+    query += ` order by id asc`;
+    console.log(query);
+    sql.query(query, (err, res) => {
+        for (let r = 0; r < res.length; r++) {
+            if (res[r].status == 1) {
+                let adver = `SELECT a.*,r.answer from advertise a left join map_rule_based m on a.dict_id = m.dict_id left join rule_based r on m.rule_based_id= r.id where product_id = ${res[r].id}`;
+    
+                sql.query(adver, (err, advertise) => {
+                res[r].data = advertise
+                // console.log('data:image/jpeg;base64,'+im.data);
+                
+              });
+              
+            }
+            if (r+1 == res.length) {
+                list = res
+                // console.log(list);
+            }
+            
+            
+        }
+        if (err) {
+            result(null, err);
+            return;
+        }
+        setTimeout(() => {
+
+            result(null, list);
+        }, 1000);
+    });
+};
 
 Data.getAll = (status,statusdelete,statusfda, result) => {
     console.log(statusfda);
@@ -354,11 +392,11 @@ Data.findById = (id, result) => {
     });
 };
 
-Data.map_rule_based = (id, datas, result) => {
-    console.log(datas);
+Data.sentent_keyword = (id, datas, result) => {
+    // console.log(datas);
     sql.query(
-        "UPDATE products SET map_rule_based=? WHERE id = ?",
-        [datas.map_rule_based, id], (err, res) => {
+        "UPDATE products SET sentent_keyword=? WHERE id = ?",
+        [datas.sentent_keyword, id], (err, res) => {
             if (err) {
                 result(null, err);
                 return;

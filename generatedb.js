@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "map_rule_based"
+var table = "advertise"
 var id = 'id'
 var data = [
-    'rule_based_id','dict_id'
+    'product_id','dict_id','sen','sentent'
 ]
 
 

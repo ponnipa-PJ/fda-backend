@@ -164,6 +164,19 @@ exports.getproductkeyword = (req, res) => {
     });
 };
 
+exports.getdecision = (req, res) => {
+    const status = req.query.status;
+    // console.log(req.body);
+    Data.getdecision(status, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving table."
+            });
+        else res.send(data);
+    });
+};
+
 exports.findAll = (req, res) => {
     const status = req.query.status;
     const statusdelete = req.query.statusdelete
@@ -208,7 +221,7 @@ exports.findproduct = (req, res) => {
 };
 
 
-exports.map_rule_based = (req, res) => {
+exports.sentent_keyword = (req, res) => {
     console.log(req.body);
     if (!req.body) {
         res.status(400).send({
@@ -216,7 +229,7 @@ exports.map_rule_based = (req, res) => {
         });
     }
 
-    Data.map_rule_based(
+    Data.sentent_keyword(
         req.params.id,
         new Data(req.body),
         (err, data) => {

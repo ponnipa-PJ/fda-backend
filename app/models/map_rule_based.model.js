@@ -24,35 +24,38 @@ result(null, { id: res.insertId, ...newData });
 Data.getAll = (name, result) => {
     var list= []
     var dict_name =[]
-let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
+// let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
+let query = "SELECT a.*,r.answer FROM advertise a left join map_rule_based m on m.dict_id = a.dict_id left JOIN rule_based r on r.id = m.rule_based_id order BY a.product_id,a.id;"
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }
 sql.query(query, async (err, res) => {
     for (let r = 0; r < res.length; r++) {
         
-        var dict = JSON.parse(res[r].dict_id);
-        res[r].no = dict.length
+    //     var dict = JSON.parse(res[r].dict_id);
+    //     res[r].no = dict.length
+            res[r].sen = JSON.parse(res[r].sen);
+            res[r].dict_id = JSON.parse(res[r].dict_id);
         
-         for (let d = 0; d < dict.length; d++) {
-            // console.log(d+1);
-            // console.log(dict.length);
-            var dic = `SELECT * FROM dicts where id = ${dict[d]} LIMIT 1`
-            dd = dict.length
-            sql.query(dic, (err, di) => {
-                 dict_name.push(di[0].name)
-                //  if (d + 1 == dict.length) {
+    //      for (let d = 0; d < dict.length; d++) {
+    //         // console.log(d+1);
+    //         // console.log(dict.length);
+    //         var dic = `SELECT * FROM dicts where id = ${dict[d]} LIMIT 1`
+    //         dd = dict.length
+    //         sql.query(dic, (err, di) => {
+    //              dict_name.push(di[0].name)
+    //             //  if (d + 1 == dict.length) {
                      
-                     // console.log(res);
-                //  }
-                // console.log('d',d+1);
-                // console.log(res[r].no);
-                if (d+1 == res[r].no) {
-                    res[r].data = dict_name;
-                    dict_name = []
-                }
-             });
-        }
+    //                  // console.log(res);
+    //             //  }
+    //             // console.log('d',d+1);
+    //             // console.log(res[r].no);
+    //             if (d+1 == res[r].no) {
+    //                 res[r].data = dict_name;
+    //                 dict_name = []
+    //             }
+    //          });
+    //     }
         if (r+1 == res.length) {
             list = res
         }
