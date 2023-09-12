@@ -1,13 +1,19 @@
 module.exports = app => {
-const datas = require("../controllers/advertise.controller.js");
+const datas = require("../controllers/rule_based.controller.js");
 
 var router = require("express").Router();
 
 router.post("/", datas.create);
 
+router.get("/getcolumn", datas.getcolumn);
+
+router.get("/createcolumn", datas.createcolumn);
+
 router.get("/", datas.findAll);
 
-router.get("/getkeyword", datas.getkeyword);
+router.get("/getbydict", datas.getbydict);
+
+router.get("/getbymap", datas.getbymap);
 
 router.get("/:id", datas.findOne);
 
@@ -17,5 +23,5 @@ router.delete("/:id", datas.delete);
 
 router.delete("/", datas.deleteAll);
 
-app.use("/api/advertise", router);
+app.use("/api/rule_based", router);
 };

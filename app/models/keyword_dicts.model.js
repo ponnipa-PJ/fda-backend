@@ -6,7 +6,8 @@ const Data = function (datas) {
 Data.create = (newData, result) => {
     sql.query("INSERT INTO keyword_dicts SET ?", newData, (err, res) => {
         if (err) {
-            result(err, null);
+            //console.log(err);
+            result(null, {err: err.errno});
             return;
         }
         result(null, { id: res.insertId, ...newData });

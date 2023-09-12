@@ -5,15 +5,9 @@ var router = require("express").Router();
 
 router.post("/", datas.create);
 
-router.get("/getcolumn", datas.getcolumn);
-
-router.get("/createcolumn", datas.createcolumn);
-
 router.get("/", datas.findAll);
 
 router.get("/getbydict", datas.getbydict);
-
-router.get("/getbymap", datas.getbymap);
 
 router.get("/:id", datas.findOne);
 

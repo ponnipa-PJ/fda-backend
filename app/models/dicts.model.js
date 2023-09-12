@@ -6,13 +6,13 @@ Data.create = (newData, result) => {
 
 sql.query("INSERT INTO dicts SET ?", newData, (err, res) => {
 if (err) {
-result(err, null);
+    result(null, { id: res.insertId, ...newData });
 return;
 }
-let rule = `ALTER TABLE rule_based ADD dict${res.insertId} int(11) NOT NULL DEFAULT(0)`;
-sql.query(rule, (err, rules) => {
-result(null, { id: res.insertId, ...newData });
-});
+// let rule = `ALTER TABLE rule_based ADD dict${res.insertId} int(11) NOT NULL DEFAULT(0)`;
+// sql.query(rule, (err, rules) => {
+// result(null, { id: res.insertId, ...newData });
+// });
 })
 }
 

@@ -12,9 +12,9 @@ const Data = function (datas) {
 Data.findproduct = async (newData, result) => {
             var list = []
     let query = `SELECT p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.url = '${newData.url}'`;
-    console.log(query);
+    //console.log(query);
     sql.query(query, async (err, res) => {
-        console.log(res);
+        //console.log(res);
         if (err) {
             result(null, err);
             return;
@@ -26,9 +26,9 @@ Data.findproduct = async (newData, result) => {
 Data.findproductfda = async (newData, result) => {
     var list = []
 let query = `SELECT p.statusfda as status,p.is_fda,p.is_cat,p.is_name,p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.statusdelete = 1 and p.fda = ${newData.fda}`;
-console.log(query);
+//console.log(query);
 sql.query(query, async (err, res) => {
-console.log(res);
+//console.log(res);
 
 
 if (err) {
@@ -55,7 +55,7 @@ Data.saveimageproduct = (newData, result) => {
         await page.setViewport({width:1920,height:1080})
         await page.goto(paths);
         var name = path.resolve("./")+'/uploads/'+ newData.id+'.jpg'
-        console.log(name);
+        //console.log(name);
         await page.screenshot({path:name})
         
         result(null, 'success');
@@ -65,7 +65,7 @@ Data.saveimageproduct = (newData, result) => {
 }
 
 Data.findscrapingheader = (newData, result) => {
-    console.log(newData);
+    //console.log(newData);
     let query = `SELECT * FROM products WHERE id = ${newData.id}`;
     
     // console.log(query);
@@ -114,7 +114,7 @@ Data.findscraping = (newData, result) => {
 
 Data.create = (newData, result) => {
     sql.query("INSERT INTO products SET ?", newData, (err, res) => {    
-        console.log(err);
+        //console.log(err);
 
         if (err) {
             result(err, null);
@@ -203,7 +203,7 @@ Data.findGraphTwo = (status, result) => {
         }
     }
     query += ` order by p.id desc`;
-    console.log(query);
+    //console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
@@ -258,7 +258,7 @@ Data.getproductkeyword = (start,end, result) => {
         // query += ` WHERE p.statusdelete = 1 and p.status =  1 and (p.id >= 7 and p.id <=9)`;
         query += ` WHERE p.statusdelete = 1 and p.status =  1 and p.id = ${start}`;
     query += ` order by p.id`;
-    console.log(query);
+    //console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             res[r].content = res[r].content.replaceAll(/([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])/g, '')
@@ -306,11 +306,11 @@ Data.getdecision = (status, result) => {
         query += ` WHERE statusdelete = 1 and status =  1`;
     }
     query += ` order by id asc`;
-    console.log(query);
+    //console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
-                let adver = `SELECT a.*,r.answer from advertise a left join map_rule_based m on a.dict_id = m.dict_id left join rule_based r on m.rule_based_id= r.id where product_id = ${res[r].id}`;
+                let adver = `SELECT a.*,m.answer from advertise a left join map_rule_based m on a.dict_id = m.dict_id where a.product_id = ${res[r].id} order by a.id`;
     
                 sql.query(adver, (err, advertise) => {
                 res[r].data = advertise
@@ -338,7 +338,7 @@ Data.getdecision = (status, result) => {
 };
 
 Data.getAll = (status,statusdelete,statusfda, result) => {
-    console.log(statusfda);
+    //console.log(statusfda);
     var list = []
     let query = "SELECT p.created_date,p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
@@ -349,7 +349,7 @@ Data.getAll = (status,statusdelete,statusfda, result) => {
         query += ` WHERE p.statusdelete =  ${statusdelete}`;
     }
     query += ` order by p.id desc`;
-    console.log(query);
+    //console.log(query);
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {

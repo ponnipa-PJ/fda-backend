@@ -9,6 +9,8 @@ router.get("/", datas.findAll);
 
 router.get("/:id", datas.findOne);
 
+router.put("/updateanswer/:id", datas.updateanswer);
+
 router.put("/:id", datas.update);
 
 router.put("/updatestatus/:id", datas.delete);

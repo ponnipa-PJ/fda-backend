@@ -608,7 +608,7 @@ Data.getdetailtype = (id, result) => {
                         var per = (res[q].weight / res[q].notraing) * 100
                         var perlevel = per / 100
                         let levelnews = ''
-                        console.log(perlevel);
+                        //console.log(perlevel);
                         if (perlevel && perlevel != Infinity) {
                             levelnews = `SELECT l.name,l.id FROM level l where ${perlevel} BETWEEN l.percent_from AND l.percent_to`;
                         } else {
@@ -1186,7 +1186,7 @@ Data.gettypetwo = (name, result) => {
                 else if (q == 6) {
                     question = `SELECT * FROM products s where s.statusdelete = true and s.statusfda = false and (s.is_fda = false and s.is_cat = false and s.is_name = false)`;
                 }
-                console.log(question);
+                //console.log(question);
                     sql.query(question, (err, questions) => {
                         var name=''
                         var id=''

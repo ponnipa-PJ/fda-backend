@@ -1,10 +1,9 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-    
-    this.datas=datas}
+this.map_rule_based_id=datas.map_rule_based_id;this.dict_id=datas.dict_id;this.no=datas.no;};
 Data.create = (newData, result) => {
-sql.query("INSERT INTO rule_based SET ?", newData.datas.data, (err, res) => {
+sql.query("INSERT INTO rule_based SET ?", newData, (err, res) => {
 if (err) {
 result(err, null);
 return;
@@ -13,57 +12,8 @@ result(null, { id: res.insertId, ...newData });
 });
 }
 
-Data.createcolumn = (name, result) => {
-    let query = `ALTER TABLE rule_based ADD dict${name} int(11) NOT NULL DEFAULT(0)`;
-    console.log(query);
-    sql.query(query, (err, res) => {
-    if (err) {
-    result(null, err);
-    return;
-    }
-    result(null, res);
-    });
-    };
-
-Data.getcolumn = (name, result) => {
-    let query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'rule_based'";
-    if (name) {
-    query += ` WHERE name LIKE '%${name}%'`;
-    }
-    sql.query(query, (err, res) => {
-    if (err) {
-    result(null, err);
-    return;
-    }
-    result(null, res);
-    });
-    };
-    
-    Data.getbymap = (name, result) => {
-        let query = name
-        console.log(query);
-        sql.query(query, (err, res) => {
-        if (err) {
-        result(null, err);
-        return;
-        }
-        result(null, res);
-        });
-        };
-    Data.getbydict = (name, result) => {
-        let query = name
-        console.log(query);
-        sql.query(query, (err, res) => {
-        if (err) {
-        result(null, err);
-        return;
-        }
-        result(null, res);
-        });
-        };
-
 Data.getAll = (name, result) => {
-let query = "SELECT * FROM rule_based";
+let query = "SELECT * FROM `map_rule_based`";
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }
@@ -88,12 +38,21 @@ return;
 result({ kind: "not_found" }, null);
 });
 };
-
+Data.getbydict = (name, result) => {
+    let query = name
+    console.log(query);
+    sql.query(query, (err, res) => {
+    if (err) {
+    result(null, err);
+    return;
+    }
+    result(null, res);
+    });
+    };
 Data.updateById = (id, datas, result) => {
-    console.log(datas.datas);
 sql.query(
-"UPDATE rule_based SET answer = ? WHERE id = ?",
-[datas.datas.answer,id],(err, res) => {
+"UPDATE rule_based SET map_rule_based_id = ?,dict_id = ?,no = ? WHERE id = ?",
+[datas.map_rule_based_id,datas.dict_id,datas.no,id],(err, res) => {
 if (err) {
 result(null, err);
 return;

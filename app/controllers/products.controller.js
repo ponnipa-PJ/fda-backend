@@ -11,7 +11,7 @@ exports.saveimageproduct = (req, res) => {
     const datas = new Data({
         cat_id: req.body.cat_id, name: req.body.name, id: req.body.id, path: req.body.path, url: req.body.url, content: req.body.content, status: req.body.status, updated_date: req.body.updated_date,
     });
-    console.log(datas);
+    //console.log(datas);
     Data.saveimageproduct(datas, (err, data) => {
         if (err)
             res.status(500).send({
@@ -32,7 +32,7 @@ exports.findscrapingheader = (req, res) => {
     const datas = new Data({
         name: req.body.name, id: req.body.id, path: req.body.path, url: req.body.url, content: req.body.content, status: req.body.status, updated_date: req.body.updated_date,
     });
-    console.log(datas);
+    //console.log(datas);
     Data.findscrapingheader(datas, (err, data) => {
         if (err)
             res.status(500).send({
@@ -53,7 +53,7 @@ exports.findscraping = (req, res) => {
     const datas = new Data({
         name: req.body.name, id: req.body.id, path: req.body.path, url: req.body.url, content: req.body.content, status: req.body.status, updated_date: req.body.updated_date,
     });
-    console.log(datas);
+    //console.log(datas);
     Data.findscraping(datas, (err, data) => {
         if (err)
             res.status(500).send({
@@ -113,7 +113,7 @@ exports.create = (req, res) => {
     const datas = new Data({
         map_rule_based:req.body.map_rule_based,cat_fda: req.body.cat_fda, statusfda: req.body.statusfda, fda: req.body.fda, statusdelete: req.body.statusdelete, cat_id: req.body.cat_id, image_path: req.body.image_path, file: req.body.file, path: req.body.path, url: req.body.url, content: req.body.content, status: req.body.status, updated_date: new Date(), is_fda: req.body.is_fda, is_cat: req.body.is_cat, is_name: req.body.is_name
     });
-    console.log(datas);
+    //console.log(datas);
     Data.create(datas, (err, data) => {
         if (err)
             res.status(500).send({

@@ -1,5 +1,16 @@
-const Data = require("../models/advertise.model.js");
+const Data = require("../models/rule_based.model.js");
+// const axios = require('axios');
 
+// columns = []
+// axios.get('http://localhost:8081/api/rule_based/getcolumn').then((data) => {
+//                 // console.log(data.data);
+//                 for (let d = 0; d < data.data.length; d++) {
+//                 columns.push(data.data[d].COLUMN_NAME+':'+'req.body.'+data.data[d].COLUMN_NAME)
+//                 }
+//                 console.log(columns);
+
+//               });
+// console.log(columns);
 exports.create = (req, res) => {
 if (!req.body) {
 res.status(400).send({
@@ -8,7 +19,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-product_id:req.body.product_id,dict_id:req.body.dict_id,sen:req.body.sen,sentent:req.body.sentent,});
+data:req.body});
 Data.create(datas, (err, data) => {
 if (err)
 res.status(500).send({
@@ -19,9 +30,9 @@ else res.send(data);
 });
 };
 
-exports.getkeyword = (req, res) => {
+exports.createcolumn = (req, res) => {
     const name = req.query.name;
-    Data.getkeyword(name, (err, data) => {
+    Data.createcolumn(name, (err, data) => {
     if (err)
     res.status(500).send({
     message:
@@ -31,6 +42,40 @@ exports.getkeyword = (req, res) => {
     });
     };
 
+exports.getcolumn = (req, res) => {
+    const name = req.query.name;
+    Data.getcolumn(name, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while retrieving table."
+    });
+    else res.send(data);
+    });
+    };
+    
+    exports.getbymap = (req, res) => {
+        const name = req.query.name;
+        Data.getbymap(name, (err, data) => {
+        if (err)
+        res.status(500).send({
+        message:
+        err.message || "Some error occurred while retrieving table."
+        });
+        else res.send(data);
+        });
+        };
+    exports.getbydict = (req, res) => {
+        const name = req.query.name;
+        Data.getbydict(name, (err, data) => {
+        if (err)
+        res.status(500).send({
+        message:
+        err.message || "Some error occurred while retrieving table."
+        });
+        else res.send(data);
+        });
+        };
 exports.findAll = (req, res) => {
 const name = req.query.name;
 Data.getAll(name, (err, data) => {
