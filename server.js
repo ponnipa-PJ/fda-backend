@@ -128,6 +128,10 @@ require("./app/routes/rule_based.routes")(app);
 require("./app/routes/map_rule_based.routes")(app);
 require("./app/routes/rule_based_keyword.routes")(app);
 require("./app/routes/advertise.routes")(app);
+require("./app/routes/user.routes")(app);
+require("./app/routes/role_menu.routes")(app);
+require("./app/routes/menus.routes")(app);
+require("./app/routes/roles.routes")(app);
 
 app.listen(PORT, () => {
   //console.log(`Server is running on port ${PORT}.`);

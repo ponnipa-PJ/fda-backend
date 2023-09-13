@@ -2,12 +2,13 @@ const sql = require("./db");
 
 const Data = function (datas) {
     this.status=datas.status;this.answer=datas.answer;
-this.rule_based_id=datas.rule_based_id;this.dict_id=datas.dict_id;};
+this.advertise_id=datas.advertise_id;this.user=datas.user};
 Data.create = (newData, result) => {
     // console.log(newData.dict_id);
     var data = {
         status:newData.status,
-        dict_id:JSON.stringify(newData.dict_id),
+        advertise_id:newData.advertise_id,
+        user:newData.user,
         answer:newData.answer,
     }
     // console.log(data);
@@ -21,11 +22,73 @@ result(null, { id: res.insertId, ...newData });
 });
 }
 
+Data.findadanduser = (ad_id,user, result) => {
+    var list= []
+    var dict_id =[]
+// let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
+let query = `SELECT * FROM map_rule_based WHERE advertise_id = ${ad_id}`
+if (user) {
+    query += ` and user = ${user}`
+}
+
+// console.log(query);
+sql.query(query, async (err, res) => {
+    // for (let r = 0; r < res.length; r++) {
+        
+    // //     var dict = JSON.parse(res[r].dict_id);
+    //         res[r].sen = JSON.parse(res[r].sen);
+    //         res[r].dict_id = JSON.parse(res[r].dict_id);
+    //         res[r].dict_name = JSON.parse(res[r].dict_name);
+    //         res[r].no = res[r].sen.length
+    //     // console.log(res[r].sen);
+    //     //  for (let d = 0; d < res[r].sen.length; d++) {
+    //     //     // console.log(d+1);
+    //     //     // console.log(dict.length);
+    //     //     var dic = `SELECT * FROM dicts where name = '${res[r].sen[d].name}' LIMIT 1`
+    //     //     // console.log(dic);
+    //     //     sql.query(dic, (err, di) => {
+    //     //         dictid = 0
+    //     //         dictname=res[r].sen[d].name
+    //     //         // console.log(di);
+    //     //         if (di.length) {
+    //     //             dictid = di[0].id
+    //     //         }
+    //     //         dict_id.push({id:dictid,
+    //     //             name:dictname})
+    //     //         //  if (d + 1 == dict.length) {
+                     
+    //     //              // console.log(res);
+    //     //         //  }
+    //     //         // console.log('d',d+1);
+    //     //         // console.log(res[r].no);
+    //     //         if (d+1 == res[r].no) {
+    //     //             res[r].dict_id_new = dict_id;
+    //     //             dict_id = []
+    //     //         }
+    //     //      });
+    //     // }
+    //     // if (r+1 == res.length) {
+    //     //     list = res
+    //     // }
+    // }
+if (err) {
+result(null, err);
+return;
+}
+setTimeout(() => {
+
+    result(null, res);
+}, 1000);
+});
+};
+
 Data.getAll = (name, result) => {
     var list= []
     var dict_id =[]
 // let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
-let query = "SELECT a.*,m.answer FROM advertise a left join map_rule_based m on m.dict_id = a.dict_id order BY a.product_id,a.id"
+let query = "SELECT a.*,m.answer FROM advertise a left join map_rule_based m on m.advertise_id = a.id order BY a.product_id,a.id"
+// let query = "SELECT a.*,m.answer FROM advertise a left join map_rule_based m on m.advertise_id = a.id order BY a.id desc"
+
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }
@@ -35,37 +98,38 @@ sql.query(query, async (err, res) => {
     //     var dict = JSON.parse(res[r].dict_id);
             res[r].sen = JSON.parse(res[r].sen);
             res[r].dict_id = JSON.parse(res[r].dict_id);
+            res[r].dict_name = JSON.parse(res[r].dict_name);
             res[r].no = res[r].sen.length
         // console.log(res[r].sen);
-         for (let d = 0; d < res[r].sen.length; d++) {
-            // console.log(d+1);
-            // console.log(dict.length);
-            var dic = `SELECT * FROM dicts where name = '${res[r].sen[d].name}' LIMIT 1`
-            // console.log(dic);
-            sql.query(dic, (err, di) => {
-                dictid = 0
-                dictname=res[r].sen[d].name
-                // console.log(di);
-                if (di.length) {
-                    dictid = di[0].id
-                }
-                dict_id.push({id:dictid,
-                    name:dictname})
-                //  if (d + 1 == dict.length) {
+        //  for (let d = 0; d < res[r].sen.length; d++) {
+        //     // console.log(d+1);
+        //     // console.log(dict.length);
+        //     var dic = `SELECT * FROM dicts where name = '${res[r].sen[d].name}' LIMIT 1`
+        //     // console.log(dic);
+        //     sql.query(dic, (err, di) => {
+        //         dictid = 0
+        //         dictname=res[r].sen[d].name
+        //         // console.log(di);
+        //         if (di.length) {
+        //             dictid = di[0].id
+        //         }
+        //         dict_id.push({id:dictid,
+        //             name:dictname})
+        //         //  if (d + 1 == dict.length) {
                      
-                     // console.log(res);
-                //  }
-                // console.log('d',d+1);
-                // console.log(res[r].no);
-                if (d+1 == res[r].no) {
-                    res[r].dict_id_new = dict_id;
-                    dict_id = []
-                }
-             });
-        }
-        if (r+1 == res.length) {
-            list = res
-        }
+        //              // console.log(res);
+        //         //  }
+        //         // console.log('d',d+1);
+        //         // console.log(res[r].no);
+        //         if (d+1 == res[r].no) {
+        //             res[r].dict_id_new = dict_id;
+        //             dict_id = []
+        //         }
+        //      });
+        // }
+        // if (r+1 == res.length) {
+        //     list = res
+        // }
     }
 if (err) {
 result(null, err);
@@ -73,7 +137,7 @@ return;
 }
 setTimeout(() => {
 
-    result(null, list);
+    result(null, res);
 }, 1000);
 });
 };

@@ -298,7 +298,7 @@ Data.getproductkeyword = (start,end, result) => {
     });
 };
 
-Data.getdecision = (status, result) => {
+Data.getdecision = (status,user, result) => {
     var list = []
     let query = "SELECT * FROM products";
     // let query = "SELECT * FROM products WHERE status = 0";
@@ -310,10 +310,21 @@ Data.getdecision = (status, result) => {
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
-                let adver = `SELECT a.*,m.answer from advertise a left join map_rule_based m on a.dict_id = m.dict_id where a.product_id = ${res[r].id} order by a.id`;
-    
+                let adver = `SELECT a.* from advertise a where a.product_id = ${res[r].id} order by a.id`;
+    // console.log(adver);
                 sql.query(adver, (err, advertise) => {
                 res[r].data = advertise
+                for (let a = 0; a < advertise.length; a++) {
+                    let answer = `SELECT * from map_rule_based m where m.advertise_id = ${advertise[a].id} and m.user = ${user}`
+                    sql.query(answer, (err, ans) => {
+console.log(ans);
+ansuser = 0
+if (ans.length > 0) {
+    ansuser = ans[0].answer
+}
+res[r].data[a].answer = ansuser
+                    });
+                }
                 // console.log('data:image/jpeg;base64,'+im.data);
                 
               });

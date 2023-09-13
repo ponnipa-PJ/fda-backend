@@ -166,8 +166,9 @@ exports.getproductkeyword = (req, res) => {
 
 exports.getdecision = (req, res) => {
     const status = req.query.status;
+    const user = req.query.user;
     // console.log(req.body);
-    Data.getdecision(status, (err, data) => {
+    Data.getdecision(status,user, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
@@ -222,7 +223,7 @@ exports.findproduct = (req, res) => {
 
 
 exports.sentent_keyword = (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     if (!req.body) {
         res.status(400).send({
             message: 'Content can not be empty!'

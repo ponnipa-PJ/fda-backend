@@ -1,9 +1,9 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-this.map_rule_based_id=datas.map_rule_based_id;this.dict_id=datas.dict_id;this.dict_name=datas.dict_name;this.no=datas.no;};
+this.name=datas.name;this.url=datas.url;this.no=datas.no;};
 Data.create = (newData, result) => {
-sql.query("INSERT INTO rule_based SET ?", newData, (err, res) => {
+sql.query("INSERT INTO menus SET ?", newData, (err, res) => {
 if (err) {
 result(err, null);
 return;
@@ -13,7 +13,8 @@ result(null, { id: res.insertId, ...newData });
 }
 
 Data.getAll = (name, result) => {
-let query = "SELECT * FROM `map_rule_based`";
+let query = "SELECT * FROM menus order by no asc";
+// console.log(query);
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }
@@ -26,7 +27,7 @@ result(null, res);
 });
 };
 Data.findById = (id, result) => {
-sql.query(`SELECT * FROM rule_based WHERE id = ${id}`, (err, res) => {
+sql.query(`SELECT * FROM menus WHERE id = ${id}`, (err, res) => {
 if (err) {
 result(err, null);
 return;
@@ -38,21 +39,28 @@ return;
 result({ kind: "not_found" }, null);
 });
 };
-Data.getbydict = (name, result) => {
-    let query = name
-    // console.log(query);
-    sql.query(query, (err, res) => {
+
+
+Data.updateorder = (id, datas, result) => {
+    sql.query(
+    "UPDATE menus SET no = ? WHERE id = ?",
+    [datas.no,id],(err, res) => {
     if (err) {
     result(null, err);
     return;
     }
-    result(null, res);
-    });
+    if (res.affectedRows == 0) {
+    result({ kind: "not_found" }, null);
+    return;
+    };result(null, { id: id, ...datas });
+    }
+    );
     };
+
 Data.updateById = (id, datas, result) => {
 sql.query(
-"UPDATE rule_based SET map_rule_based_id = ?,dict_id = ?,no = ? WHERE id = ?",
-[datas.map_rule_based_id,datas.dict_id,datas.no,id],(err, res) => {
+"UPDATE menus SET name = ? WHERE id = ?",
+[datas.name,id],(err, res) => {
 if (err) {
 result(null, err);
 return;
@@ -66,7 +74,7 @@ return;
 };
 Data.remove = (id, result) => {
 sql.query(
-"DELETE FROM rule_based  WHERE id = ?",id, (err, res) => {
+"DELETE FROM menus  WHERE id = ?",id, (err, res) => {
 if (err) {
 result(null, err);
 return;
@@ -80,7 +88,7 @@ result(null, res);
 };
 
 Data.removeAll = result => {
-sql.query("DELETE FROM rule_based", (err, res) => {
+sql.query("DELETE FROM menus", (err, res) => {
 if (err) {
 result(null, err);
 return;

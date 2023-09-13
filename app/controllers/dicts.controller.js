@@ -19,6 +19,18 @@ else res.send(data);
 });
 };
 
+exports.createddicttoken = (req, res) => {
+    const name = req.query.name;
+    
+    Data.createddicttoken(name, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while retrieving table."
+    });
+    else res.send(data);
+    });
+    };
 exports.findAll = (req, res) => {
 const status = req.query.status;
 const name = req.query.name;

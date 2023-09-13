@@ -1,9 +1,9 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-this.map_rule_based_id=datas.map_rule_based_id;this.dict_id=datas.dict_id;this.dict_name=datas.dict_name;this.no=datas.no;};
+this.name=datas.name;};
 Data.create = (newData, result) => {
-sql.query("INSERT INTO rule_based SET ?", newData, (err, res) => {
+sql.query("INSERT INTO roles SET ?", newData, (err, res) => {
 if (err) {
 result(err, null);
 return;
@@ -13,7 +13,7 @@ result(null, { id: res.insertId, ...newData });
 }
 
 Data.getAll = (name, result) => {
-let query = "SELECT * FROM `map_rule_based`";
+let query = "SELECT * FROM roles";
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }
@@ -26,7 +26,7 @@ result(null, res);
 });
 };
 Data.findById = (id, result) => {
-sql.query(`SELECT * FROM rule_based WHERE id = ${id}`, (err, res) => {
+sql.query(`SELECT * FROM roles WHERE id = ${id}`, (err, res) => {
 if (err) {
 result(err, null);
 return;
@@ -38,21 +38,11 @@ return;
 result({ kind: "not_found" }, null);
 });
 };
-Data.getbydict = (name, result) => {
-    let query = name
-    // console.log(query);
-    sql.query(query, (err, res) => {
-    if (err) {
-    result(null, err);
-    return;
-    }
-    result(null, res);
-    });
-    };
+
 Data.updateById = (id, datas, result) => {
 sql.query(
-"UPDATE rule_based SET map_rule_based_id = ?,dict_id = ?,no = ? WHERE id = ?",
-[datas.map_rule_based_id,datas.dict_id,datas.no,id],(err, res) => {
+"UPDATE roles SET name = ? WHERE id = ?",
+[datas.name,id],(err, res) => {
 if (err) {
 result(null, err);
 return;
@@ -66,7 +56,7 @@ return;
 };
 Data.remove = (id, result) => {
 sql.query(
-"DELETE FROM rule_based  WHERE id = ?",id, (err, res) => {
+"DELETE FROM roles  WHERE id = ?",id, (err, res) => {
 if (err) {
 result(null, err);
 return;
@@ -80,7 +70,7 @@ result(null, res);
 };
 
 Data.removeAll = result => {
-sql.query("DELETE FROM rule_based", (err, res) => {
+sql.query("DELETE FROM roles", (err, res) => {
 if (err) {
 result(null, err);
 return;

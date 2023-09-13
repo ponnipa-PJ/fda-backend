@@ -3,18 +3,28 @@ const sql = require("./db");
 const Data = function (datas) {
 this.name=datas.name;this.status=datas.status;};
 Data.create = (newData, result) => {
-
+// console.log(newData);
 sql.query("INSERT INTO dicts SET ?", newData, (err, res) => {
-if (err) {
+    if (err) {
+        // console.log(err);
+        result(null, {err: err.errno});
+        return;
+    }
     result(null, { id: res.insertId, ...newData });
-return;
+});
 }
-// let rule = `ALTER TABLE rule_based ADD dict${res.insertId} int(11) NOT NULL DEFAULT(0)`;
-// sql.query(rule, (err, rules) => {
-// result(null, { id: res.insertId, ...newData });
-// });
-})
-}
+
+Data.createddicttoken = (name, result) => {
+    let query = name;
+        // console.log(query);
+    sql.query(query, (err, res) => {
+    if (err) {
+    result(null, err);
+    return;
+    }
+    result(null, { id: res.insertId });
+});
+    };
 
 Data.getAll = (status,name, result) => {
 let query = "SELECT * FROM dicts";

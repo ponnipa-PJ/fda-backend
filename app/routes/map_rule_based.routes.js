@@ -5,6 +5,8 @@ var router = require("express").Router();
 
 router.post("/", datas.create);
 
+router.get("/findadanduser", datas.findadanduser);
+
 router.get("/", datas.findAll);
 
 router.get("/:id", datas.findOne);
