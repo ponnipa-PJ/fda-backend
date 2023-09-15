@@ -14,7 +14,7 @@ result(null, { id: res.insertId, ...newData });
 
 Data.getAll = (name, result) => {
     list= []
-let query = "SELECT * FROM rule_based_keyword order by product_id";
+let query = "SELECT k.*,c.name as category FROM rule_based_keyword k left join products p on k.product_id = p.id left join category c on c.id = p.cat_id order by k.product_id";
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;
 }

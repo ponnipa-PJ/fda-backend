@@ -86,7 +86,7 @@ Data.getAll = (name, result) => {
     var list= []
     var dict_id =[]
 // let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
-let query = "SELECT a.*,m.answer FROM advertise a left join map_rule_based m on m.advertise_id = a.id order BY a.product_id,a.id"
+let query = "SELECT a.*,p.cat_fda,c.name as category FROM advertise a left join products p on p.id = a.product_id left join category c on c.id = p.cat_id order BY a.product_id,a.id"
 // let query = "SELECT a.*,m.answer FROM advertise a left join map_rule_based m on m.advertise_id = a.id order BY a.id desc"
 
 if (name) {
