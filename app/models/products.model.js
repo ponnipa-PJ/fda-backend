@@ -39,9 +39,8 @@ result(null, res);
 });
 }
 
-Data.saveimageproduct = (newData, result) => {
-    // console.log(newData);
-    let query = `SELECT * FROM products WHERE id = ${newData.id}`;
+Data.saveimageproduct = (id,pathimg, result) => {
+    let query = `SELECT * FROM products WHERE id = ${id}`;
     
     // console.log(query);
     sql.query(query, (err, res) => {
@@ -49,12 +48,12 @@ Data.saveimageproduct = (newData, result) => {
     (async () => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        // console.log(res[0].path);
-        var paths = backend_path+path.resolve("./") +'/'+newData.path
-        // console.log(paths);
+        // console.log(path.resolve("./"));
+        var paths = path.resolve("./") +'/'+pathimg
+        console.log(paths);
         await page.setViewport({width:1920,height:1080})
         await page.goto(paths);
-        var name = path.resolve("./")+'/uploads/'+ newData.id+'.jpg'
+        var name = path.resolve("./")+'/uploads/'+ id+'.jpg'
         //console.log(name);
         await page.screenshot({path:name})
         
@@ -62,7 +61,34 @@ Data.saveimageproduct = (newData, result) => {
         await browser.close();
       })();
     });
-}
+    
+};
+
+
+// Data.saveimageproduct = (newData, result) => {
+//     // console.log(newData);
+//     let query = `SELECT * FROM products WHERE id = ${newData.id}`;
+    
+//     // console.log(query);
+//     sql.query(query, (err, res) => {
+//         // console.log(res);
+//     (async () => {
+//         const browser = await puppeteer.launch();
+//         const page = await browser.newPage();
+//         // console.log(res[0].path);
+//         var paths = backend_path+path.resolve("./") +'/'+newData.path
+//         // console.log(paths);
+//         await page.setViewport({width:1920,height:1080})
+//         await page.goto(paths);
+//         var name = path.resolve("./")+'/uploads/'+ newData.id+'.jpg'
+//         //console.log(name);
+//         await page.screenshot({path:name})
+        
+//         result(null, 'success');
+//         await browser.close();
+//       })();
+//     });
+// }
 
 Data.findscrapingheader = (newData, result) => {
     //console.log(newData);
@@ -156,7 +182,7 @@ Data.findGraphOne = (status, result) => {
             }
         for (let r = 0; r < data.length; r++) {
             if (data[r].status == 1) {
-                axios.get('https://resful-deep.onrender.com/base64?id=' + data[r].id).then((im) => {
+                axios.get('http://127.0.0.1:5000/base64?id=' + data[r].id).then((im) => {
                     data[r].src = 'data:image/jpeg;base64,'+im.data
                 // console.log('data:image/jpeg;base64,'+im.data);
                 
@@ -207,7 +233,7 @@ Data.findGraphTwo = (status, result) => {
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
-                axios.get('https://resful-deep.onrender.com/base64?id=' + res[r].id).then((im) => {
+                axios.get('http://127.0.0.1:5000/base64?id=' + res[r].id).then((im) => {
                 res[r].src = 'data:image/jpeg;base64,'+im.data
                 // console.log('data:image/jpeg;base64,'+im.data);
                 
@@ -269,7 +295,7 @@ Data.getproductkeyword = (start,end, result) => {
                 res[r].content = res[r].content.replaceAll("*", "");
                 res[r].content = res[r].content.replaceAll("#", "");
             res[r].desc = finddescription(res[r].content)
-            // axios.get('https://resful-deep.onrender.com/worktokendesc?text='+res[r].desc).then((desc) => {
+            // axios.get('http://127.0.0.1:5000/worktokendesc?text='+res[r].desc).then((desc) => {
         // console.log(desc.data);
         // res[r].desctxt = desc.data
         if (r+1 == res.length) {
@@ -277,7 +303,7 @@ Data.getproductkeyword = (start,end, result) => {
             // console.log(list);
         }
     //   });
-        //     axios.get('https://resful-deep.onrender.com/checkkeyword?name=' + res[r].desc).then((desc) => {
+        //     axios.get('http://127.0.0.1:5000/checkkeyword?name=' + res[r].desc).then((desc) => {
         //     // console.log(desc.data);
         //     // if (desc.length > 0) {
         //       res[r].keyword =  desc.data
@@ -351,7 +377,7 @@ res[r].data[a].answer = ansuser
 Data.getAll = (status,statusdelete,statusfda, result) => {
     //console.log(statusfda);
     var list = []
-    let query = "SELECT p.created_date,p.cat_fda,p.fda,p.statusfda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
+    let query = "SELECT p.*,c.name as cat_name FROM products p left join category c on p.cat_id = c.id";
     // let query = "SELECT * FROM products WHERE status = 0";
     if (status) {
         query += ` WHERE p.statusdelete = 1 and p.status =  ${status}`;
@@ -364,7 +390,7 @@ Data.getAll = (status,statusdelete,statusfda, result) => {
     sql.query(query, (err, res) => {
         for (let r = 0; r < res.length; r++) {
             if (res[r].status == 1) {
-                axios.get('https://resful-deep.onrender.com/base64?id=' + res[r].id).then((im) => {
+                axios.get('http://127.0.0.1:5000/base64?id=' + res[r].id).then((im) => {
                 res[r].src = 'data:image/jpeg;base64,'+im.data
                 // console.log('data:image/jpeg;base64,'+im.data);
                 
@@ -390,7 +416,7 @@ Data.getAll = (status,statusdelete,statusfda, result) => {
 };
 
 Data.findById = (id, result) => {
-    sql.query(`SELECT p.cat_fda,p.fda,p.id,p.cat_id,p.file,p.path,p.image_path,p.url,p.name,p.content,p.status,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.id = ${id} and p.statusdelete = 1`, (err, res) => {
+    sql.query(`SELECT p.*,c.name as cat_name FROM products p left join category c on p.cat_id = c.id WHERE p.id = ${id} and p.statusdelete = 1`, (err, res) => {
         if (err) {
             result(err, null);
             return;

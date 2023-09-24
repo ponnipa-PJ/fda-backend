@@ -1,26 +1,39 @@
 const Data = require("../models/products.model.js");
 
-
 exports.saveimageproduct = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: 'Content can not be empty!'
-        });
-    }
-
-    const datas = new Data({
-        cat_id: req.body.cat_id, name: req.body.name, id: req.body.id, path: req.body.path, url: req.body.url, content: req.body.content, status: req.body.status, updated_date: req.body.updated_date,
-    });
-    //console.log(datas);
-    Data.saveimageproduct(datas, (err, data) => {
+    const id = req.query.id;
+    const path = req.query.path
+    // console.log(req.body);
+    Data.saveimageproduct(id, path, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Tutorial."
+                    err.message || "Some error occurred while retrieving table."
             });
         else res.send(data);
     });
 };
+
+// exports.saveimageproduct = (req, res) => {
+//     if (!req.body) {
+//         res.status(400).send({
+//             message: 'Content can not be empty!'
+//         });
+//     }
+
+//     const datas = new Data({
+//         cat_id: req.body.cat_id, name: req.body.name, id: req.body.id, path: req.body.path, url: req.body.url, content: req.body.content, status: req.body.status, updated_date: req.body.updated_date,
+//     });
+//     //console.log(datas);
+//     Data.saveimageproduct(datas, (err, data) => {
+//         if (err)
+//             res.status(500).send({
+//                 message:
+//                     err.message || "Some error occurred while creating the Tutorial."
+//             });
+//         else res.send(data);
+//     });
+// };
 
 exports.findscrapingheader = (req, res) => {
     if (!req.body) {

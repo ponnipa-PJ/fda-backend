@@ -23,7 +23,7 @@ router.post("/findscraping", datas.findscraping);
 
 router.post("/findscrapingheader", datas.findscrapingheader);
 
-router.post("/saveimageproduct", datas.saveimageproduct);
+router.get("/saveimageproduct", datas.saveimageproduct);
 
 router.get("/:id", datas.findOne);
 
