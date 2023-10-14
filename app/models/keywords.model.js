@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-this.name=datas.name;this.token=datas.token;this.status=datas.status;};
+this.name=datas.name;this.token=datas.token;this.status=datas.status;this.dict_id=datas.dict_id;this.dict_name=datas.dict_name;};
 Data.create = (newData, result) => {
 sql.query("INSERT INTO keywords SET ?", newData, (err, res) => {
 if (err) {
@@ -38,6 +38,25 @@ return;
 result({ kind: "not_found" }, null);
 });
 };
+
+Data.updatedictid = (id, datas, result) => {
+    console.log(datas.dict_id);
+    datas.dict_id = JSON.stringify(datas.dict_id)
+    datas.dict_name = JSON.stringify(datas.dict_name)
+    sql.query(
+    "UPDATE keywords SET dict_id = ?,dict_name=? WHERE id = ?",
+    [datas.dict_id,datas.dict_name,id],(err, res) => {
+    if (err) {
+    result(null, err);
+    return;
+    }
+    if (res.affectedRows == 0) {
+    result({ kind: "not_found" }, null);
+    return;
+    };result(null, { id: id, ...datas });
+    }
+    );
+    };
 
 Data.updateById = (id, datas, result) => {
 sql.query(

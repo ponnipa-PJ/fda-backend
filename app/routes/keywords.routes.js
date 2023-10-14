@@ -9,6 +9,8 @@ router.get("/", datas.findAll);
 
 router.get("/:id", datas.findOne);
 
+router.put("/updatedictid/:id", datas.updatedictid);
+
 router.put("/:id", datas.update);
 
 router.delete("/:id", datas.delete);
