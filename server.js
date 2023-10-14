@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const base64Img = require('base64-img');
 var multer = require('multer');
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 const app = express();
@@ -58,25 +58,25 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to fda application." });
 });
 
-app.get("/scraping", (req, res) => {
+// app.get("/scraping", (req, res) => {
 
-  (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    var url = req.query.url
-    console.log(url);
-    await page.goto(url);
-    const textSelector = await page.waitForSelector(
-      '.product-detail'
-    );
-    const fullTitle = await textSelector?.evaluate(el => el.textContent);
+//   (async () => {
+//     const browser = await puppeteer.launch();
+//     const page = await browser.newPage();
+//     var url = req.query.url
+//     console.log(url);
+//     await page.goto(url);
+//     const textSelector = await page.waitForSelector(
+//       '.product-detail'
+//     );
+//     const fullTitle = await textSelector?.evaluate(el => el.textContent);
 
-    // Print the full title
-    // console.log('The title of this blog post is "%s".', fullTitle);
-    res.send(fullTitle)
-    await browser.close();
-  })();
-});
+//     // Print the full title
+//     // console.log('The title of this blog post is "%s".', fullTitle);
+//     res.send(fullTitle)
+//     await browser.close();
+//   })();
+// });
 
 
 function getFolderSizeByGlob(folder) {
