@@ -1,13 +1,15 @@
 module.exports = app => {
-const datas = require("../controllers/keyword_dicts.controller.js");
+const datas = require("../controllers/product_token.controller.js");
 
 var router = require("express").Router();
 
 router.post("/", datas.create);
 
-router.get("/", datas.findAll);
+router.post("/getmapproduct/", datas.getmapproduct);
 
-router.get("/mapdictId", datas.mapdictId);
+router.post("/getproduct/", datas.getproduct);
+
+router.get("/", datas.findAll);
 
 router.get("/:id", datas.findOne);
 
@@ -17,5 +19,5 @@ router.delete("/:id", datas.delete);
 
 router.delete("/", datas.deleteAll);
 
-app.use("/api/keyword_dicts", router);
+app.use("/api/product_token", router);
 };

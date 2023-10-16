@@ -8,7 +8,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-    answer:req.body.answer,status:req.body.status,advertise_id:req.body.advertise_id,user:req.body.user});
+    answer:req.body.answer,status:req.body.status,advertise_id:req.body.advertise_id,user:req.body.user,keyword_id:req.body.keyword_id});
 Data.create(datas, (err, data) => {
 if (err)
 res.status(500).send({
@@ -18,6 +18,19 @@ err.message || "Some error occurred while creating the Tutorial."
 else res.send(data);
 });
 };
+
+exports.getallrulebased = (req, res) => {
+    const ad_id = req.query.ad_id;
+    const user = req.query.user;
+    Data.getallrulebased(ad_id,user, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while retrieving table."
+    });
+    else res.send(data);
+    });
+    };
 
 exports.findadanduser = (req, res) => {
     const ad_id = req.query.ad_id;

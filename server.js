@@ -132,6 +132,7 @@ require("./app/routes/user.routes")(app);
 require("./app/routes/role_menu.routes")(app);
 require("./app/routes/menus.routes")(app);
 require("./app/routes/roles.routes")(app);
+require("./app/routes/product_token.routes")(app);
 
 app.listen(PORT, () => {
   //console.log(`Server is running on port ${PORT}.`);

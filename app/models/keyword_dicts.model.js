@@ -14,6 +14,20 @@ Data.create = (newData, result) => {
     });
 }
 
+Data.mapdictId = (name, result) => {
+    let query = "SELECT d.id FROM keyword_dicts k join dicts d on d.name = k.name where k.status = 1";
+    if (name) {
+        query += ` WHERE status = 1`;
+    }
+    sql.query(query, (err, res) => {
+        if (err) {
+            result(null, err);
+            return;
+        }
+        result(null, res);
+    });
+};
+
 Data.getAll = (name, result) => {
     let query = "SELECT * FROM keyword_dicts";
     if (name) {

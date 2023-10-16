@@ -7,6 +7,8 @@ router.post("/", datas.create);
 
 router.get("/findadanduser", datas.findadanduser);
 
+router.get("/getallrulebased", datas.getallrulebased);
+
 router.get("/", datas.findAll);
 
 router.get("/:id", datas.findOne);

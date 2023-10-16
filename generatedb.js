@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "rule_based"
+var table = "product_token"
 var id = 'id'
 var data = [
-    'map_rule_based_id','dict_id','no'
+    'url','sentence','sentence_keyword','status'
 ]
 
 

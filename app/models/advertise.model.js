@@ -1,9 +1,19 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-this.product_id=datas.product_id;this.dict_id=datas.dict_id;this.sen=datas.sen;this.sentent=datas.sentent;};
+    this.dict_name=datas.dict_name;this.keyword_dict_id=datas.keyword_dict_id;this.product_id=datas.product_id;this.dict_id=datas.dict_id;this.sen=datas.sen;this.sentent=datas.sentent;this.product_token_id=datas.product_token_id;};
 Data.create = (newData, result) => {
-sql.query("INSERT INTO advertise SET ?", newData, (err, res) => {
+    var data = {
+        product_token_id:newData.product_token_id,
+        keyword_dict_id:JSON.stringify(newData.keyword_dict_id),
+        dict_id:JSON.stringify(newData.dict_id),
+        dict_name:JSON.stringify(newData.dict_name),
+        sen:JSON.stringify(newData.sen),
+        sentent:newData.sentent,
+    }
+    // console.log(data);
+sql.query("INSERT INTO advertise SET ?", data, (err, res) => {
+    // console.log(err);
 if (err) {
 result(err, null);
 return;

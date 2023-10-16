@@ -1,4 +1,45 @@
-const Data = require("../models/keyword_dicts.model.js");
+const Data = require("../models/product_token.model.js");
+
+
+exports.getmapproduct = (req, res) => {
+    if (!req.body) {
+    res.status(400).send({
+    message: 'Content can not be empty!'
+    });
+    }
+    
+    const datas = new Data({
+    url:req.body.url,sentence:req.body.sentence,sentence_keyword:req.body.sentence_keyword,status:req.body.status,});
+    Data.getmapproduct(datas, (err, data) => {
+        console.log(err);
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while creating the Tutorial."
+    });
+    else res.send(data);
+    });
+    };
+
+exports.getproduct = (req, res) => {
+    if (!req.body) {
+    res.status(400).send({
+    message: 'Content can not be empty!'
+    });
+    }
+    
+    const datas = new Data({
+    url:req.body.url,sentence:req.body.sentence,sentence_keyword:req.body.sentence_keyword,status:req.body.status,});
+    Data.getproduct(datas, (err, data) => {
+        console.log(err);
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while creating the Tutorial."
+    });
+    else res.send(data);
+    });
+    };
 
 exports.create = (req, res) => {
 if (!req.body) {
@@ -8,8 +49,9 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-name:req.body.name,status:req.body.status,});
+url:req.body.url,sentence:req.body.sentence,sentence_keyword:req.body.sentence_keyword,status:req.body.status,});
 Data.create(datas, (err, data) => {
+    console.log(err);
 if (err)
 res.status(500).send({
 message:
@@ -18,19 +60,6 @@ err.message || "Some error occurred while creating the Tutorial."
 else res.send(data);
 });
 };
-
-
-exports.mapdictId = (req, res) => {
-    const name = req.query.name;
-    Data.mapdictId(name, (err, data) => {
-    if (err)
-    res.status(500).send({
-    message:
-    err.message || "Some error occurred while retrieving table."
-    });
-    else res.send(data);
-    });
-    };
 
 exports.findAll = (req, res) => {
 const name = req.query.name;

@@ -2,7 +2,7 @@ const sql = require("./db");
 
 const Data = function (datas) {
     this.status=datas.status;this.answer=datas.answer;
-this.advertise_id=datas.advertise_id;this.user=datas.user};
+this.advertise_id=datas.advertise_id;this.user=datas.user;this.keyword_id=datas.keyword_id};
 Data.create = (newData, result) => {
     // console.log(newData.dict_id);
     var data = {
@@ -10,10 +10,11 @@ Data.create = (newData, result) => {
         advertise_id:newData.advertise_id,
         user:newData.user,
         answer:newData.answer,
+        keyword_id:newData.keyword_id,
     }
     // console.log(data);
 sql.query("INSERT INTO map_rule_based SET ?", data, (err, res) => {
-    //console.log(err);
+    console.log(err);
 if (err) {
 result(err, null);
 return;
@@ -21,6 +22,32 @@ return;
 result(null, { id: res.insertId, ...newData });
 });
 }
+
+Data.getallrulebased = (ad_id,user, result) => {
+    var list= []
+    var dict_id =[]
+// let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
+let query = `SELECT * FROM map_rule_based m order by keyword_id`
+
+// console.log(query);
+sql.query(query, async (err, res) => {
+    for (let r = 0; r < res.length; r++) {
+            var dic = `SELECT * FROM rule_based where map_rule_based_id = '${res[r].id}' order by no asc`
+            // console.log(dic);
+            sql.query(dic, (err, di) => {
+                res[r].dict = di
+             });
+        }
+if (err) {
+result(null, err);
+return;
+}
+setTimeout(() => {
+
+    result(null, res);
+}, 1000);
+});
+};
 
 Data.findadanduser = (ad_id,user, result) => {
     var list= []
