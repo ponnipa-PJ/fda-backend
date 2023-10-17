@@ -20,6 +20,8 @@ keywords_name = []
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
+const url = 'http://localhost:8081'
+// const url = 'https://api-fda.ponnipa.in.th'
 
 app.use(cors(corsOptions));
 
@@ -35,9 +37,7 @@ app.use("/uploads", express.static("/uploads"));
 
 var upload = multer({ dest: __dirname + '/uploads/' });
 
-// var url = 'http://localhost:8081/'
 
-var url = 'https://api-fda.ponnipa.in.th'
 getdicts()
 getkeyword()
 var dictfile = 'customdict.txt'
@@ -184,11 +184,11 @@ app.post("/wordtokendesc", async (req, res) => {
 
   }
   var keywords = getKeywordIdbyDicts(intersectiondata,arrkeyword)
-  console.log(keywords);
+  // console.log(keywords);
   let uniqueindex = keywords.filter((c, index) => {
     return keywords.indexOf(c) === index;
   });
-console.log(uniqueindex);
+// console.log(uniqueindex);
 
   res.json({sentent:sumtext,keywordId:uniqueindex});
 });
