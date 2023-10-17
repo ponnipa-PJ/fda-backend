@@ -8,12 +8,12 @@ Data.create = (newData, result) => {
         keyword_dict_id:JSON.stringify(newData.keyword_dict_id),
         dict_id:JSON.stringify(newData.dict_id),
         dict_name:JSON.stringify(newData.dict_name),
-        sen:JSON.stringify(newData.sen),
+        sen:newData.sen,
         sentent:newData.sentent,
     }
-    // console.log(data);
+    console.log(data);
 sql.query("INSERT INTO advertise SET ?", data, (err, res) => {
-    // console.log(err);
+    console.log(err);
 if (err) {
 result(err, null);
 return;

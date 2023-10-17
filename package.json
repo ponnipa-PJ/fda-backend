@@ -25,7 +25,7 @@
     "mocha": "^10.2.0",
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
-    "natural": "^6.5.0",
-    "puppeteer": "^20.7.3"
+    "puppeteer": "^20.7.3",
+    "wordcut": "^0.9.1"
   }
 }

@@ -254,7 +254,7 @@ Case.token = (id, datas, result) => {
 
 Case.getMenuAll = (name, result) => {
   // let query = "SELECT * FROM report";
-  let query = "SELECT * FROM menus order by no asc";
+  let query = "SELECT * FROM menus where status = 1 order by no asc";
   if (name) {
     query += ` WHERE name LIKE '%${name}%'`;
   }

@@ -13,7 +13,7 @@ result(null, { id: res.insertId, ...newData });
 }
 
 Data.getAll = (name, result) => {
-let query = "SELECT * FROM menus order by no asc";
+let query = "SELECT * FROM menus where status = 1 order by no asc";
 // console.log(query);
 if (name) {
 query += ` WHERE name LIKE '%${name}%'`;

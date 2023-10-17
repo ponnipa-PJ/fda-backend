@@ -1,7 +1,6 @@
 const sql = require("./db");
 const puppeteer = require('puppeteer');
 
-var natural = require('natural');
 const axios = require('axios');
 const path = require('path');
 

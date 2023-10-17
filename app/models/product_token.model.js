@@ -1,9 +1,16 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-this.url=datas.url;this.sentence=datas.sentence;this.sentence_keyword=datas.sentence_keyword;this.status=datas.status;};
+    this.keyword_id=datas.keyword_id;this.url=datas.url;this.sentence=datas.sentence;this.sentence_keyword=datas.sentence_keyword;this.status=datas.status;};
 Data.create = (newData, result) => {
-sql.query("INSERT INTO product_token SET ?", newData, (err, res) => {
+    var data = {
+        url:newData.url,
+        sentence:newData.sentence,
+        sentence_keyword:newData.sentence_keyword,
+        keyword_id:JSON.stringify(newData.keyword_id),
+        status:newData.status,
+    }
+sql.query("INSERT INTO product_token SET ?", data, (err, res) => {
 if (err) {
 result(err, null);
 return;
