@@ -7,7 +7,11 @@ router.post("/", datas.create);
 
 router.post("/getmapproduct/", datas.getmapproduct);
 
+router.post("/getproductkeyword/", datas.getproductkeyword);
+
 router.post("/getproduct/", datas.getproduct);
+
+router.post("/getbestrulebased/", datas.getbestrulebased);
 
 router.get("/", datas.findAll);
 

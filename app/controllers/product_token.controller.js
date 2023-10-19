@@ -9,9 +9,51 @@ exports.getmapproduct = (req, res) => {
     }
 
     const datas = new Data({
-        keyword_id: req.body.keyword_id, url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+        id: req.body.id,keyword_id: req.body.keyword_id, url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
     });
     Data.getmapproduct(datas, (err, data) => {
+        console.log(err);
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while creating the Tutorial."
+            });
+        else res.send(data);
+    });
+};
+
+exports.getbestrulebased = (req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+            message: 'Content can not be empty!'
+        });
+    }
+
+    const datas = new Data({
+        id: req.body.id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+    });
+    Data.getbestrulebased(datas, (err, data) => {
+        console.log(err);
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while creating the Tutorial."
+            });
+        else res.send(data);
+    });
+};
+
+exports.getproductkeyword = (req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+            message: 'Content can not be empty!'
+        });
+    }
+
+    const datas = new Data({
+        id: req.body.id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+    });
+    Data.getproductkeyword(datas, (err, data) => {
         console.log(err);
         if (err)
             res.status(500).send({
@@ -30,7 +72,7 @@ exports.getproduct = (req, res) => {
     }
 
     const datas = new Data({
-        url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+        id: req.body.id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
     });
     Data.getproduct(datas, (err, data) => {
         console.log(err);
@@ -51,7 +93,7 @@ exports.create = (req, res) => {
     }
 
     const datas = new Data({
-        keyword_id: req.body.keyword_id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+        id: req.body.id,keyword_id: req.body.keyword_id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
     });
     Data.create(datas, (err, data) => {
         console.log(err);

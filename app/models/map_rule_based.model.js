@@ -27,12 +27,12 @@ Data.getallrulebased = (ad_id,user, result) => {
     var list= []
     var dict_id =[]
 // let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
-let query = `SELECT * FROM map_rule_based m order by keyword_id`
+let query = `SELECT * FROM rule_based group by map_rule_based_id`
 
 // console.log(query);
 sql.query(query, async (err, res) => {
     for (let r = 0; r < res.length; r++) {
-            var dic = `SELECT * FROM rule_based where map_rule_based_id = '${res[r].id}' order by no asc`
+            var dic = `SELECT * FROM rule_based where map_rule_based_id = '${res[r].map_rule_based_id}' order by no asc`
             // console.log(dic);
             sql.query(dic, (err, di) => {
                 res[r].dict = di
@@ -216,8 +216,8 @@ return;
 Data.remove = (id, datas, result) => {
     //console.log(datas);
     sql.query(
-    "UPDATE map_rule_based SET status = ? WHERE id = ?",
-    [datas.status,id],(err, res) => {
+    "UPDATE map_rule_based SET answer = ? WHERE id = ?",
+    [datas.answer,id],(err, res) => {
     if (err) {
     result(null, err);
     return;

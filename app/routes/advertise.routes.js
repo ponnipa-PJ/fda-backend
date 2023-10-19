@@ -13,6 +13,8 @@ router.get("/:id", datas.findOne);
 
 router.put("/:id", datas.update);
 
+router.put("/updaterulebased/:id", datas.updaterulebased);
+
 router.delete("/:id", datas.delete);
 
 router.delete("/", datas.deleteAll);

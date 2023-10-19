@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-    this.dict_name=datas.dict_name;this.keyword_dict_id=datas.keyword_dict_id;this.product_id=datas.product_id;this.dict_id=datas.dict_id;this.sen=datas.sen;this.sentent=datas.sentent;this.product_token_id=datas.product_token_id;};
+    this.rule_based_name=datas.rule_based_name;this.rule_based_id=datas.rule_based_id;this.sentence_rulebase=datas.sentence_rulebase;this.count_rulebased=datas.count_rulebased;this.dict_name=datas.dict_name;this.keyword_dict_id=datas.keyword_dict_id;this.product_id=datas.product_id;this.dict_id=datas.dict_id;this.sen=datas.sen;this.sentent=datas.sentent;this.product_token_id=datas.product_token_id;};
 Data.create = (newData, result) => {
     var data = {
         product_token_id:newData.product_token_id,
@@ -10,15 +10,17 @@ Data.create = (newData, result) => {
         dict_name:JSON.stringify(newData.dict_name),
         sen:newData.sen,
         sentent:newData.sentent,
+        sentence_rulebase:newData.sentence_rulebase
     }
-    console.log(data);
+    // console.log(data);
 sql.query("INSERT INTO advertise SET ?", data, (err, res) => {
-    console.log(err);
+    // console.log(err);
+    // console.log(res.insertId);
 if (err) {
 result(err, null);
 return;
 }
-result(null, { id: res.insertId, ...newData });
+result(null, { id: res.insertId });
 });
 }
 
@@ -88,6 +90,25 @@ return;
 }
 result({ kind: "not_found" }, null);
 });
+};
+
+Data.updaterulebased = (id, datas, result) => {
+    // console.log(datas);
+    datas.sentence_rulebase = JSON.stringify(datas.sentence_rulebase)
+    var rule_based_id = JSON.stringify(datas.rule_based_id)
+    var rule_based_name = JSON.stringify(datas.rule_based_name)
+    sql.query(`UPDATE advertise SET count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${datas.sentence_rulebase} WHERE id = ${id}`, (err, res) => {
+    console.log(err);
+if (err) {
+result(null, err);
+return;
+}
+if (res.affectedRows == 0) {
+result({ kind: "not_found" }, null);
+return;
+};result(null, { id: id, ...datas });
+}
+);
 };
 
 Data.updateById = (id, datas, result) => {
