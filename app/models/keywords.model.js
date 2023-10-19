@@ -59,9 +59,10 @@ Data.updatedictid = (id, datas, result) => {
     };
 
 Data.updateById = (id, datas, result) => {
+    var token = JSON.stringify(datas.token)
 sql.query(
 "UPDATE keywords SET name = ?, token = ? WHERE id = ?",
-[datas.name,datas.token,id],(err, res) => {
+[datas.name,token,id],(err, res) => {
 if (err) {
 result(null, err);
 return;

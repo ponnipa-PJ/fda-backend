@@ -188,7 +188,7 @@ app.post("/wordtokendesc", async (req, res) => {
   let uniqueindex = keywords.filter((c, index) => {
     return keywords.indexOf(c) === index;
   });
-// console.log(uniqueindex);
+console.log(uniqueindex);
 
   res.json({sentent:sumtext,keywordId:uniqueindex});
 });
@@ -196,6 +196,8 @@ app.post("/wordtokendesc", async (req, res) => {
 function token(text) {
   wordcut.init(dictfile, true);
   var name_result = wordcut.cutIntoArray(text)
+  // var result = name_result.filter((letter) => letter !== " ");
+// console.log(result);
   return name_result
 }
 
@@ -225,31 +227,32 @@ app.post("/checkkeyword", async (req, res) => {
   let uniqueindex = indexlist.filter((c, index) => {
     return indexlist.indexOf(c) === index;
   });
-  // console.log(name_result);
-  // console.log(uniqueindex);
+  console.log(name_result);
+  console.log(uniqueindex);
   listarr = []
   countarray = 0
   for (let u = 0; u < uniqueindex.length; u++) {
     // console.log(countarray,uniqueindex[u]);
     if (countarray < uniqueindex[u]) {
-      // console.log(uniqueindex[u]);
+      console.log(uniqueindex[u]);
       var backward = findbackward(name_result, uniqueindex[u], front)
-      // console.log(backward);
-      // console.log(name_result[backward]);
+      console.log(backward);
+      console.log(name_result[backward]);
       var findindexfore = name_result.slice([backward], uniqueindex[u])
       // var findindexlastname = name_result.slice(uniqueindex[u],name_result.length)
-      // console.log(findindexfore);
+      console.log(findindexfore);
       var forward = findforward(name_result, uniqueindex[u], back)
       var findindexback = name_result.slice(uniqueindex[u], forward)
-      // console.log(forward);
-      // console.log(findindexback);
+      console.log(forward);
+      console.log(findindexback);
       var arrtoken = findindexfore.concat(findindexback);
+      console.log(arrtoken);
       listarr.push(arrtoken)
       countarray = forward
     }
 
   }
-  // console.log(listarr);
+  console.log(listarr);
   dict_id = []
   keyword_dict_id = []
   sentent = []
@@ -329,7 +332,7 @@ app.post("/checkkeyword", async (req, res) => {
     // }
 
   }
-  // console.log(jsonData);
+  console.log(jsonData);
 
   res.json(jsonData);
 });

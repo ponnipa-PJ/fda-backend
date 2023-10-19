@@ -12,6 +12,7 @@ Data.create = (newData, result) => {
         status: newData.status,
     }
     sql.query("INSERT INTO product_token SET ?", data, (err, res) => {
+        console.log(err);
         if (err) {
             result(err, null);
             return;
@@ -109,7 +110,9 @@ Data.getmapproduct = (newData, result) => {
                                         allcount = 0
                                         var sumone = getAllIndexes(sum, 0);
 // console.log(sumone);
-list.push({ 'allcount': sumone.length, 'rule': mapdict, 'name': mapdictname })
+var percent = (100 * sumone.length)/ (mapdict.length).toFixed(2)
+// console.log(percent);
+list.push({ 'allcount': percent, 'rule': mapdict, 'name': mapdictname })
                                         // for (let s = 0; s < sum.length; s++) {
                                         //     if (sum[s] == 0) {
                                         //         allcount = allcount + 1
