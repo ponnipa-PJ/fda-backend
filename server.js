@@ -200,7 +200,13 @@ function token(text) {
 // console.log(result);
   return name_result
 }
-
+function getAllIndexes(arr, val) {
+  var indexes = [], i = -1;
+  while ((i = arr.indexOf(val, i + 1)) != -1) {
+      indexes.push(i);
+  }
+  return indexes;
+}
 app.post("/checkkeyword", async (req, res) => {
   // console.log(front, back);
   var name = req.body.content
@@ -218,21 +224,28 @@ app.post("/checkkeyword", async (req, res) => {
     for (let k = 0; k < union.length; k++) {
       if (name_result[n] == union[k]) {
         // console.log(name_result[n]);
-        let index = name_result.indexOf(name_result[n])
-        indexlist.push(index)
+        // let index = name_result.indexOf(name_result[n])
+        allindex = getAllIndexes(name_result, name_result[n])
+        for (let a = 0; a < allindex.length; a++) {
+          indexlist.push(allindex[a])
+          
+        }
       }
     }
   }
   // console.log(indexlist);
-  let uniqueindex = indexlist.filter((c, index) => {
-    return indexlist.indexOf(c) === index;
-  });
+  // console.log(union);
+  let uniqueindex = indexlist
+  // getAllIndexes(dict_id, mapid[did])
+  // let uniqueindex = indexlist.filter((c, index) => {
+  //   return indexlist.indexOf(c) === index;
+  // });
   // console.log(name_result);
   // console.log(uniqueindex);
   listarr = []
   countarray = 0
   for (let u = 0; u < uniqueindex.length; u++) {
-    // console.log(countarray,uniqueindex[u]);
+    console.log(countarray,uniqueindex[u]);
     if (countarray < uniqueindex[u]) {
       // console.log(uniqueindex[u]);
       var backward = findbackward(name_result, uniqueindex[u], front)
