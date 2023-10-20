@@ -20,8 +20,8 @@ keywords_name = []
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
-const url = 'http://localhost:8081'
-// const url = 'https://api-fda.ponnipa.in.th'
+// const url = 'http://localhost:8081'
+const url = 'https://api-fda.ponnipa.in.th'
 
 app.use(cors(corsOptions));
 
@@ -227,32 +227,32 @@ app.post("/checkkeyword", async (req, res) => {
   let uniqueindex = indexlist.filter((c, index) => {
     return indexlist.indexOf(c) === index;
   });
-  console.log(name_result);
-  console.log(uniqueindex);
+  // console.log(name_result);
+  // console.log(uniqueindex);
   listarr = []
   countarray = 0
   for (let u = 0; u < uniqueindex.length; u++) {
     // console.log(countarray,uniqueindex[u]);
     if (countarray < uniqueindex[u]) {
-      console.log(uniqueindex[u]);
+      // console.log(uniqueindex[u]);
       var backward = findbackward(name_result, uniqueindex[u], front)
-      console.log(backward);
-      console.log(name_result[backward]);
+      // console.log(backward);
+      // console.log(name_result[backward]);
       var findindexfore = name_result.slice([backward], uniqueindex[u])
       // var findindexlastname = name_result.slice(uniqueindex[u],name_result.length)
-      console.log(findindexfore);
+      // console.log(findindexfore);
       var forward = findforward(name_result, uniqueindex[u], back)
       var findindexback = name_result.slice(uniqueindex[u], forward)
-      console.log(forward);
-      console.log(findindexback);
+      // console.log(forward);
+      // console.log(findindexback);
       var arrtoken = findindexfore.concat(findindexback);
-      console.log(arrtoken);
+      // console.log(arrtoken);
       listarr.push(arrtoken)
       countarray = forward
     }
 
   }
-  console.log(listarr);
+  // console.log(listarr);
   dict_id = []
   keyword_dict_id = []
   sentent = []
@@ -294,9 +294,10 @@ app.post("/checkkeyword", async (req, res) => {
 
   jsonData = []
   for (let li = 0; li < listarr.length; li++) {
-    const dict_name = listarr[li].filter(element => {
-      return element !== ' ';
-    });
+    dict_name = listarr[li]
+    // const dict_name = listarr[li].filter(element => {
+    //   return element !== ' ';
+    // });
     if (li == 0) {
       jsonData.push({
         keyword_dict_id: keyword_dict_id[li],
