@@ -245,7 +245,7 @@ app.post("/checkkeyword", async (req, res) => {
   listarr = []
   countarray = 0
   for (let u = 0; u < uniqueindex.length; u++) {
-    console.log(countarray,uniqueindex[u]);
+    // console.log(countarray,uniqueindex[u]);
     if (countarray < uniqueindex[u]) {
       // console.log(uniqueindex[u]);
       var backward = findbackward(name_result, uniqueindex[u], front)
@@ -412,6 +412,10 @@ function findforward(array, index, setting) {
 function findbackward(array, index, setting) {
   bc = 0
   mb = 1
+  // console.log(index);
+  if (index == 0 ||index == 1) {
+    cb = 0
+  }else{
   while (bc < setting) {
     cb = index - mb
     // console.log('mb',mb);
@@ -426,7 +430,7 @@ function findbackward(array, index, setting) {
     }
     mb = mb + 1
   }
-
+  }
   return cb
 }
 
