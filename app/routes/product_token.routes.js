@@ -19,6 +19,8 @@ router.get("/:id", datas.findOne);
 
 router.put("/:id", datas.update);
 
+router.put("/updatemap/:id", datas.updatemap);
+
 router.delete("/:id", datas.delete);
 
 router.delete("/", datas.deleteAll);

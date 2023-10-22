@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-    this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
+    this.name = datas.name;this.fda = datas.fda;this.product_status = datas.product_status;this.cat_status = datas.cat_status;this.fda_status = datas.fda_status;this.name_status = datas.name_status;this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
 };
 Data.create = (newData, result) => {
     var data = {
@@ -625,6 +625,22 @@ Data.findById = (id, result) => {
         }
         result({ kind: "not_found" }, null);
     });
+};
+
+Data.updatemap = (id, datas, result) => {
+    sql.query(
+        "UPDATE product_token SET name = ?,fda = ?,product_status = ?,cat_status = ? ,fda_status = ? ,name_status = ? WHERE id = ?",
+        [datas.name, datas.fda, datas.product_status, datas.cat_status, datas.fda_status, datas.name_status, id], (err, res) => {
+            if (err) {
+                result(null, err);
+                return;
+            }
+            if (res.affectedRows == 0) {
+                result({ kind: "not_found" }, null);
+                return;
+            }; result(null, { id: id, ...datas });
+        }
+    );
 };
 
 Data.updateById = (id, datas, result) => {

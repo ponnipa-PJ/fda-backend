@@ -10,6 +10,7 @@ const glob = require('glob')
 const axios = require('axios');
 var expect = require("chai").expect
 var wordcut = require("wordcut");
+const fetch = require("cross-fetch");
 
 var corsOptions = {
   origin: "*"
@@ -20,8 +21,8 @@ keywords_name = []
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
-// const url = 'http://localhost:8081'
-const url = 'https://api-fda.ponnipa.in.th'
+const url = 'http://localhost:8081'
+// const url = 'https://api-fda.ponnipa.in.th'
 
 app.use(cors(corsOptions));
 
@@ -140,6 +141,117 @@ function intersection(array1, array2) {
   filteredArray = array1.filter(value => array2.includes(value));
   return filteredArray
 }
+function fdatype(data){
+  // console.log(data);
+  if (data) {
+    var text = ['(']
+  var findfda = data
+  for (let t = 0; t < text.length; t++) {
+    findfda = findfda.substring(findfda.indexOf(0),findfda.indexOf(text[0]));
+
+  }
+  }else{
+    findfda = ''
+  }
+  return findfda
+}
+app.post("/checkfda", async (req, res) => {
+  var result = {}
+  var statusfda = 0
+  // var fda = '1311346550052'
+  var fda = req.body.fda
+  var content = req.body.content
+  var produceng = req.body.produceng
+  var productha = req.body.productha
+  var typepro = req.body.typepro
+  var mapname = ''
+  var mapcat = ''
+  var mapcatstatus = 0
+  var mapnamestatus = 0
+
+  var colorname = 'background-color:#f9bdbb'
+  var colorcat = 'background-color:#f9bdbb'
+    var name = token(productha+' '+produceng)
+    name = name.filter((letter) => letter !== " ");
+    var contenttoken = token(content)
+    // contenttoken = contenttoken.filter((letter) => letter !== " ");
+    var type = fdatype(typepro)
+    const uniquekeyword = contenttoken.filter(element => name.includes(element));
+  let intersectiondata = uniquekeyword.filter((c, index) => {
+    return uniquekeyword.indexOf(c) === index;
+  });  
+  var indexlist = []
+  // console.log(intersectiondata);
+  for (let i = 0; i < intersectiondata.length; i++) {
+    if (intersectiondata[i]!= 'อาหาร' && intersectiondata[i]!= 'ผลิตภัณฑ์' && intersectiondata[i]!= 'เสริม' && intersectiondata[i]!= 'เครื่องดื่ม' && intersectiondata[i]!= 'ชนิด' && intersectiondata[i]!= '(' && intersectiondata[i]!= ')') {
+      // console.log(intersectiondata[i]);
+      allindex = getAllIndexes(contenttoken, intersectiondata[i])
+        for (let a = 0; a < allindex.length; a++) {
+          indexlist.push(allindex[a])
+        }
+    }
+  }
+  // console.log(indexlist);
+  var countarray = 0
+  var listarr = ''
+  // console.log(contenttoken);
+  for (let u = 0; u < indexlist.length; u++) {
+    // console.log(countarray,indexlist[u]);
+    if (countarray < indexlist[u]) {
+      // console.log(indexlist[u]);
+      var backward = findbackward(contenttoken, indexlist[u], 2)
+      // console.log(backward);
+      // console.log(contenttoken[backward]);
+      var findindexfore = contenttoken.slice([backward], indexlist[u])
+      // var findindexlastname = contenttoken.slice(indexlist[u],contenttoken.length)
+      // console.log(findindexfore);
+      var forward = findforward(contenttoken, indexlist[u], 3)
+      var findindexback = contenttoken.slice(indexlist[u], forward)
+      // console.log(contenttoken[forward]);
+      // console.log(findindexback);
+      var arrtoken = findindexfore.concat(findindexback);
+      // console.log(arrtoken);
+      listarr = arrtoken
+      countarray = forward
+    }
+  }
+  // console.log(listarr);
+  mapname = listarr.toString()
+  mapname = mapname.replaceAll(',', '')
+
+  for (let k = 0; k < intersectiondata.length; k++) {
+    mapname = mapname.replaceAll(intersectiondata[k], '<span style="color:red">' + intersectiondata[k] + '</span>')
+  }
+  // console.log(mapname);
+  if (mapname) {
+    mapnamestatus = 1
+    colorname = "background-color:#a3e9a4"
+  }
+  const uniquecatall = contenttoken.filter(element => type.includes(element));
+  let uniquecat = uniquecatall.filter((c, index) => {
+    return uniquecatall.indexOf(c) === index;
+  }); 
+  if (uniquecat.length > 0) {
+    mapcat = type
+    mapcatstatus = 1
+    colorcat = "background-color:#a3e9a4"
+  }
+//     console.log(mapname);
+// console.log(uniquecat);
+//     console.log(contenttoken);
+//     console.log(type);
+// axios.post(urls + '/api/dicts?status=1',data).then((res) => {
+//   console.log(res.data);
+// });
+  res.json({'name':mapname,
+  'mapnamestatus':mapnamestatus,
+'category':mapcat,
+'mapcatstatus':mapcatstatus,
+'token':contenttoken,
+'colorname':colorname,
+'colorcat':colorcat
+})
+});
 
 app.get("/token", async (req, res) => {
   var cut = token(req.query.text)
