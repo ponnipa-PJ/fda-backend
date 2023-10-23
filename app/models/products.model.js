@@ -49,7 +49,7 @@ Data.saveimageproduct = (id,pathimg, result) => {
         const page = await browser.newPage();
         // console.log(path.resolve("./"));
         var paths = path.resolve("./") +'/'+pathimg
-        console.log(paths);
+        //console.log(paths);
         await page.setViewport({width:1920,height:1080})
         await page.goto(paths);
         var name = path.resolve("./")+'/uploads/'+ id+'.jpg'
@@ -342,7 +342,7 @@ Data.getdecision = (status,user, result) => {
                 for (let a = 0; a < advertise.length; a++) {
                     let answer = `SELECT * from map_rule_based m where m.advertise_id = ${advertise[a].id} and m.user = ${user}`
                     sql.query(answer, (err, ans) => {
-console.log(ans);
+//console.log(ans);
 ansuser = 0
 if (ans.length > 0) {
     ansuser = ans[0].answer
@@ -462,8 +462,8 @@ Data.updatefdastatus = (id, datas, result) => {
 };
 
 Data.updatescraping = (id, datas, result) => {
-    console.log("UPDATE products SET fda=?,name=?,content=?,status=?,updated_date = ? WHERE id = ?",
-    [datas.fda,datas.name,datas.content,datas.status, new Date(), id]);
+    //console.log("UPDATE products SET fda=?,name=?,content=?,status=?,updated_date = ? WHERE id = ?",
+    // [datas.fda,datas.name,datas.content,datas.status, new Date(), id]);
     sql.query(
         "UPDATE products SET fda=?,name=?,content=?,status=?,updated_date = ? WHERE id = ?",
         [datas.fda,datas.name,datas.content,datas.status, new Date(), id], (err, res) => {
@@ -495,8 +495,8 @@ Data.updateById = (id, datas, result) => {
     );
 };
 Data.remove = (id,datas, result) => {
-    console.log(datas);
-    console.log(`UPDATE products SET statusdelete = ${datas.statusdelete} WHERE id = ?`, id);
+    //console.log(datas);
+    //console.log(`UPDATE products SET statusdelete = ${datas.statusdelete} WHERE id = ?`, id);
     sql.query(
         `UPDATE products SET statusdelete = ${datas.statusdelete} WHERE id = ?`, id, (err, res) => {
             if (err) {

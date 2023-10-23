@@ -11,6 +11,9 @@ router.get("/getallrulebased", datas.getallrulebased);
 
 router.get("/", datas.findAll);
 
+router.get("/checkintb", datas.checkintb);
+
+
 router.get("/:id", datas.findOne);
 
 router.put("/updateanswer/:id", datas.updateanswer);

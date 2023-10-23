@@ -205,7 +205,7 @@ Case.getKey = (key, result) => {
   if (key) {
     query += ` WHERE user_key = '${key}'`;
   }
-  console.log(query);
+  //console.log(query);
   sql.query(query, (err, res) => {
     if (err) {
       //console.log("error: ", err);
@@ -219,9 +219,9 @@ Case.getKey = (key, result) => {
 };
 
 Case.getbytoken = (id, result) => {
-  console.log(`SELECT * FROM users WHERE token = '${id}'`);
+  //console.log(`SELECT * FROM users WHERE token = '${id}'`);
   sql.query(`SELECT * FROM users WHERE token = '${id}'`, (err, res) => {
-    console.log(err);
+    //console.log(err);
   if (err) {
   result(err, null);
   return;
@@ -235,11 +235,11 @@ Case.getbytoken = (id, result) => {
   };
 
 Case.token = (id, datas, result) => {
-  console.log(id);
+  //console.log(id);
   sql.query(
   "UPDATE users SET active = ? WHERE token = ?",
   [1,id],(err, res) => {
-    console.log(err);
+    //console.log(err);
   if (err) {
   result(null, err);
   return;
@@ -331,7 +331,7 @@ Case.updatetokenline = (id, datas, result) => {
   sql.query(
   "UPDATE users SET line_token = ? WHERE id = ?",
   [datas.line_token,id],(err, res) => {
-    console.log(err);
+    //console.log(err);
   if (err) {
   result(null, err);
   return;
@@ -344,7 +344,7 @@ Case.updatetokenline = (id, datas, result) => {
   );
   };
 Case.updateById = (id, cases, result) => {
-  console.log(id);
+  //console.log(id);
   if(cases.password != cases.hash){
     cases.password = bcrypt.hashSync(cases.password, 8)
   }

@@ -24,7 +24,7 @@ exports.create = (req, res) => {
         hash:req.body.hash,
         phone:req.body.phone
     });
-    console.log(cases);
+    //console.log(cases);
     // Save Tutorial in the database
     Case.create(cases, (err, data) => {
         if (err)

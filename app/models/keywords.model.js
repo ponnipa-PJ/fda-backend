@@ -40,7 +40,7 @@ result({ kind: "not_found" }, null);
 };
 
 Data.updatedictid = (id, datas, result) => {
-    console.log(datas.dict_id);
+    //console.log(datas.dict_id);
     datas.dict_id = JSON.stringify(datas.dict_id)
     datas.dict_name = JSON.stringify(datas.dict_name)
     sql.query(

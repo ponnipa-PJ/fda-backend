@@ -3,9 +3,9 @@ const sql = require("./db");
 const Data = function (datas) {
 this.name=datas.name;this.status=datas.status;};
 Data.create = (newData, result) => {
-console.log(newData);
+//console.log(newData);
 sql.query("INSERT INTO dicts SET ?", newData, (err, res) => {
-    console.log(err);
+    //console.log(err);
     if (err) {
         result(null, {err: err.errno});
         return;

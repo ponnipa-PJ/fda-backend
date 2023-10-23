@@ -17,7 +17,7 @@ let query = "SELECT * FROM category";
 if (status) {
 query += ` WHERE status = ${status}`;
 }
-console.log(status);
+//console.log(status);
 sql.query(query, (err, res) => {
 if (err) {
 result(null, err);

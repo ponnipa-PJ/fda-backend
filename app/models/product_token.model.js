@@ -54,6 +54,7 @@ Data.getmapproduct = (newData, result) => {
             // let besttoken = `SELECT dict_id FROM rule_based where map_rule_based_id = ${mapid[did].map_rule_based_id} order by no`;
             // console.log(besttoken);
             sql.query(besttoken, async (err, besttokens) => {
+                // console.log(besttokens);
                 for (let m = 0; m < besttokens.length; m++) {
                     let findmap = `SELECT dict_id,dict_name FROM rule_based where map_rule_based_id = ${besttokens[m].map_rule_based_id} order by no`;
                     sql.query(findmap, async (err, findmaps) => {
@@ -82,8 +83,12 @@ Data.getmapproduct = (newData, result) => {
                                     })
                                     var no = indexdictid - indexmapdict
                                     // console.log('---------------');
+                                    // console.log(besttokens[m].map_rule_based_id);
                                     // console.log(indexmapdict, indexdictid);
-                                    if (indexmapdict < indexdictid) {
+                                    // console.log(realrule);
+                                    //     console.log(mapdict);
+                                    //     console.log(dict_id);
+                                    if (indexmapdict <= indexdictid) {
 
                                         for (let r = 0; r < realrule.length; r++) {
                                             realrule[r] = no + r
@@ -317,7 +322,7 @@ Data.getbestrulebased = (newData, result) => {
 
 Data.getproductkeyword = (newData, result) => {
     // console.log(newData);
-    sql.query(`SELECT * FROM product_token WHERE url = "${newData.url}"`, (err, res) => {
+    sql.query(`SELECT * FROM product_token WHERE id = "${newData.url}"`, (err, res) => {
         // console.log(res[0]);
         if (res.length != 0) {
             let query = `SELECT a.* FROM advertise a where a.product_token_id = ${res[0].id} `;
@@ -365,9 +370,10 @@ Data.getproductkeyword = (newData, result) => {
 Data.getproduct = (newData, result) => {
     // console.log(newData);
     sql.query(`SELECT * FROM product_token WHERE url = "${newData.url}"`, (err, res) => {
+        // console.log(`SELECT * FROM product_token WHERE url = "${newData.url}"`);
         // console.log(res[0]);
         if (res.length != 0) {
-            let query = `SELECT a.* FROM advertise a where a.product_token_id = ${res[0].id}`;
+            let query = `SELECT a.* FROM advertise a where a.product_token_id = ${res[0].id} order by count_rulebased,rule_based_id LIMIT 1`;
             // if (newData.id) {
             //     query += ` and m.user = ${newData.id}`
             // }
@@ -375,19 +381,17 @@ Data.getproduct = (newData, result) => {
             sql.query(query, async (err, des) => {
                 // console.log(des);
                 res[0].keyword = des
-                for (let k = 0; k < des.length; k++) {
-                    let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[k].id}  `;
+                    let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
                     if (newData.id) {
                         getmap += ` and user = ${newData.id}`
                     }
                     sql.query(getmap, async (err, getmaps) => {
                         if (getmaps.length > 0) {
-                            res[0].keyword[k].answer = getmaps[0].answer
-                            res[0].keyword[k].mapId = getmaps[0].id
+                            res[0].keyword[0].answer = getmaps[0].answer
+                            res[0].keyword[0].mapId = getmaps[0].id
                         }
 
                     })
-                }
                 var arrrule = []
                 // for (let d = 0; d < res[0].keyword.length; d++) {
                 //     var jsonkeyword = JSON.parse(res[0].keyword[d].keyword_dict_id)

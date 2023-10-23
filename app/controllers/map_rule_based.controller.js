@@ -44,6 +44,18 @@ exports.findadanduser = (req, res) => {
     else res.send(data);
     });
     };
+    
+    exports.checkintb = (req, res) => {
+        const name = req.query.name;
+        Data.checkintb(name, (err, data) => {
+        if (err)
+        res.status(500).send({
+        message:
+        err.message || "Some error occurred while retrieving table."
+        });
+        else res.send(data);
+        });
+        };
 
 exports.findAll = (req, res) => {
 const name = req.query.name;

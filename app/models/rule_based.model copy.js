@@ -15,7 +15,7 @@ result(null, { id: res.insertId, ...newData });
 
 Data.createcolumn = (name, result) => {
     let query = `ALTER TABLE rule_based ADD dict${name} int(11) NOT NULL DEFAULT(0)`;
-    console.log(query);
+    //console.log(query);
     sql.query(query, (err, res) => {
     if (err) {
     result(null, err);
@@ -41,7 +41,7 @@ Data.getcolumn = (name, result) => {
     
     Data.getbymap = (name, result) => {
         let query = name
-        console.log(query);
+        //console.log(query);
         sql.query(query, (err, res) => {
         if (err) {
         result(null, err);
@@ -52,7 +52,7 @@ Data.getcolumn = (name, result) => {
         };
     Data.getbydict = (name, result) => {
         let query = name
-        console.log(query);
+        //console.log(query);
         sql.query(query, (err, res) => {
         if (err) {
         result(null, err);
@@ -90,7 +90,7 @@ result({ kind: "not_found" }, null);
 };
 
 Data.updateById = (id, datas, result) => {
-    console.log(datas.datas);
+    //console.log(datas.datas);
 sql.query(
 "UPDATE rule_based SET answer = ? WHERE id = ?",
 [datas.datas.answer,id],(err, res) => {

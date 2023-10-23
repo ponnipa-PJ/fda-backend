@@ -94,10 +94,10 @@ result({ kind: "not_found" }, null);
 
 Data.updaterulebased = (id, datas, result) => {
     // console.log(datas);
-    datas.sentence_rulebase = JSON.stringify(datas.sentence_rulebase)
+    var sentence_rulebase = JSON.stringify(datas.sentence_rulebase)
     var rule_based_id = JSON.stringify(datas.rule_based_id)
     var rule_based_name = JSON.stringify(datas.rule_based_name)
-    sql.query(`UPDATE advertise SET count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${datas.sentence_rulebase} WHERE id = ${id}`, (err, res) => {
+    sql.query(`UPDATE advertise SET count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`, (err, res) => {
     console.log(err);
 if (err) {
 result(null, err);
@@ -129,8 +129,9 @@ return;
 );
 };
 Data.remove = (id, result) => {
+    // console.log(`DELETE FROM advertise product_token_id = ${id}`);
 sql.query(
-"DELETE FROM advertise  WHERE id = ?",id, (err, res) => {
+`DELETE FROM advertise WHERE product_token_id = ${id}`,(err, res) => {
 if (err) {
 result(null, err);
 return;

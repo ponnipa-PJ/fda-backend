@@ -287,7 +287,7 @@ app.post("/wordtokendesc", async (req, res) => {
   let intersectiondata = uniquekeyword.filter((c, index) => {
     return uniquekeyword.indexOf(c) === index;
   });  
-  console.log(intersectiondata);
+  // console.log(intersectiondata);
 
   sumtext = name_result.toString()
   sumtext = sumtext.replaceAll(',', '')
@@ -300,7 +300,7 @@ app.post("/wordtokendesc", async (req, res) => {
   let uniqueindex = keywords.filter((c, index) => {
     return keywords.indexOf(c) === index;
   });
-console.log(uniqueindex);
+// console.log(uniqueindex);
 
   res.json({sentent:sumtext,keywordId:uniqueindex});
 });
@@ -458,7 +458,7 @@ app.post("/checkkeyword", async (req, res) => {
     // }
 
   }
-  console.log(jsonData);
+  // console.log(jsonData);
 
   res.json(jsonData);
 });
@@ -480,10 +480,15 @@ function getDictIdKeyword(first_array, second_array) {
 
 async function createdictsDict(words) {
   var dictlist = [];
+  // console.log(words);
+  var words = words.filter(n => n)
+  // console.log(words);
   for (let w = 0; w < words.length; w++) {
-    if (words[w] != ' ') {
+    if (words[w] != ' ' && words[w] != '  ' && words[w] != '') {
+      // console.log(words[w]);
       await axios.get(url+'/api/dicts?name=' + words[w]).then(async (res) => {
-        if (res.data.length > 0) {
+        // console.log(res.data);
+        if (res.data.length == 1) {
           // console.log(res.data[0].id);
           dictlist.push(res.data[0].id);
         } else {

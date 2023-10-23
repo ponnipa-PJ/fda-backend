@@ -14,7 +14,7 @@ Data.create = (newData, result) => {
     }
     // console.log(data);
 sql.query("INSERT INTO map_rule_based SET ?", data, (err, res) => {
-    console.log(err);
+    //console.log(err);
 if (err) {
 result(err, null);
 return;
@@ -105,6 +105,77 @@ return;
 setTimeout(() => {
 
     result(null, res);
+}, 1000);
+});
+};
+
+Data.checkintb = (name, result) => {
+    var list= {}
+    var dict_id =[]
+    console.log(name);
+    var namefull = JSON.parse(name)
+    var dict_namesql = ''
+    for (let n = 0; n < namefull.length; n++) {
+        if (n == 0) {
+            dict_namesql += ` ${namefull[n]}`
+        }else{
+            dict_namesql += ` or dict_id = ${namefull[n]}`
+        }
+        
+    }
+// let query = "SELECT m.*,r.answer FROM map_rule_based m join rule_based r on m.rule_based_id = r.id WHERE m.status = 1";
+let query = "SELECT * FROM rule_based"
+// let query = "SELECT a.*,m.answer FROM advertise a left join map_rule_based m on m.advertise_id = a.id order BY a.id desc"
+
+if (name) {
+query += ` WHERE dict_id = ${dict_namesql}`;
+}
+query += ' group by map_rule_based_id'
+console.log(query);
+sql.query(query, async (err, res) => {
+    for (let r = 0; r < res.length; r++) {
+        
+    // //     var dict = JSON.parse(res[r].dict_id);
+    //         res[r].sen = JSON.parse(res[r].sen);
+    //         res[r].dict_id = JSON.parse(res[r].dict_id);
+    //         res[r].dict_name = JSON.parse(res[r].dict_name);
+    //         res[r].no = res[r].sen.length
+    //     // console.log(res[r].sen);
+    //     //  for (let d = 0; d < res[r].sen.length; d++) {
+    //     //     // console.log(d+1);
+    //     //     // console.log(dict.length);
+            var dic = `SELECT * FROM rule_based where map_rule_based_id = ${res[r].map_rule_based_id}`
+    //     //     // console.log(dic);
+            sql.query(dic, (err, di) => {
+                // console.log(di.length);
+                // console.log(namefull.length);
+                if (di.length == namefull.length) {
+                    console.log(res[r].map_rule_based_id);
+                    var arr = []
+                    for (let m = 0; m < di.length; m++) {
+                        arr.push(di[m].dict_id)
+                        if (m+1 == di.length) {
+                            
+                    const uniquekeyword = arr.filter(element => namefull.includes(element));
+                    console.log(uniquekeyword);
+                    if (uniquekeyword.length == namefull.length) {
+                        list = {count:1}
+                    }
+                        }
+                    }
+if (r+1 == res.length && list == {}) {
+    list = {count:0}
+}
+                }
+             });
+    }
+if (err) {
+result(null, err);
+return;
+}
+setTimeout(() => {
+
+    result(null, list);
 }, 1000);
 });
 };
