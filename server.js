@@ -377,7 +377,12 @@ app.post("/checkkeyword", async (req, res) => {
       // console.log(findindexback);
       var arrtoken = findindexfore.concat(findindexback);
       // console.log(arrtoken);
-      listarr.push(arrtoken)
+      sen = arrtoken.toString()
+      sen = sen.replaceAll(',', '')
+      // console.log(sen);
+      var n = token(sen)
+      // console.log('n',n);
+      listarr.push(n)
       countarray = forward
     }
 
@@ -419,7 +424,7 @@ app.post("/checkkeyword", async (req, res) => {
   }
   // console.log(sentent);
   // console.log(listarr);
-  // console.log(dict_id);
+  console.log(dict_id);
   // console.log(keyword_dict_id);
 
   jsonData = []

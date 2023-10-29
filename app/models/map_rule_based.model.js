@@ -273,7 +273,7 @@ Data.updateanswer = (id, datas, result) => {
     Data.updateweight = (id, datas, result) => {
         sql.query(`SELECT * FROM map_rule_based WHERE id = ${id}`, (err, map) => {
 weight = map[0].weight +1
-console.log(map[0].map_advertise);
+// console.log(map[0].map_advertise);
 var dummy = []
 if (map[0].map_advertise) {
     dummy = JSON.parse(map[0].map_advertise) 
@@ -282,7 +282,7 @@ if (map[0].map_advertise) {
     dummy.push(datas.advertise_id)
 }
 
-console.log('dummy',dummy);
+// console.log('dummy',dummy);
 map_advertise = JSON.stringify(dummy)
 // console.log(weight);
 // console.log(map_advertise);

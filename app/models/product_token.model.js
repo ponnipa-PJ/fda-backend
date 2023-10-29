@@ -91,21 +91,21 @@ Data.getmapproduct = (newData, result) => {
                                     // console.log(besttokens[m].map_rule_based_id);
                                     // console.log(indexmapdict, indexdictid);
                                     // console.log(realrule);
-                                    //     console.log(mapdict);
+                                        // console.log(mapdict);
                                     //     console.log(dict_id);
                                     if (indexmapdict <= indexdictid) {
 
                                         for (let r = 0; r < realrule.length; r++) {
                                             realrule[r] = no + r
                                         }
-                                        // console.log(newmaparr);
+                                        // console.log('newmaparr',newmaparr);
 
                                         for (let r = 0; r < realrule.length; r++) {
                                             //    console.log(realrule[r]);
                                             //    console.log(mapdict[r]);
                                             var index = realrule[r];
                                             var value = mapdict[r];
-                                            newmaparr.splice(index, 0, value);
+                                            newmaparr.splice(index, 1, value);
                                         }
                                         // console.log(realrule);
                                         // console.log(mapdict);
@@ -122,7 +122,7 @@ Data.getmapproduct = (newData, result) => {
 // console.log(sumone);
 var percent = (100 * sumone.length)/ (mapdict.length).toFixed(2)
 // console.log(percent);
-list.push({ 'allcount': percent, 'rule': mapdict, 'name': mapdictname,'map_id':besttokens[m].map_rule_based_id })
+list.push({ 'length': mapdict.length,'allcount': percent, 'rule': mapdict, 'name': mapdictname,'map_id':besttokens[m].map_rule_based_id })
                                         // for (let s = 0; s < sum.length; s++) {
                                         //     if (sum[s] == 0) {
                                         //         allcount = allcount + 1
@@ -259,6 +259,7 @@ Data.getbestrulebased = (newData, result) => {
     sql.query(`SELECT * FROM advertise WHERE id = ${newData.id}`, async (err, res) => {
         if (res.length != 0) {
             var dict_id = JSON.parse(res[0].keyword_dict_id)
+            var dict_idsentence = JSON.parse(res[0].dict_id)
             var sen = res[0].sen
             var sen_result = ''
             // console.log(sen);
@@ -300,24 +301,42 @@ Data.getbestrulebased = (newData, result) => {
                 // rule_based_name = rule_based_name.replaceAll(',', '')
 //                 console.log(rule_based_name);
 // console.log(sen_result);
-                // arrrule.map(function (num, idx) {
-                    sen_result.map(function (sen, i) {
-                        if (rule_based_name == sen) {
-                        // if (num == sen && arrrule[idx+1] == sen_result[i+1]) {
-                            // console.log(arrrule[idx+1]);
-                            // console.log(sen_result[i+1]);
-                            sen_result[i] = rule_based_name.replaceAll(rule_based_name, '<span style=color:yellow>' + rule_based_name + '</span>')
-                            // sen_result[i+1] = num.replaceAll(sen+1, '<span style=color:yellow>' + sen+1 + '</span>')
-                        }
-                    })
-                // })
-                dictname.map(function (num, idx) {
-                    sen_result.map(function (sen, i) {
-                        if (num == sen) {
-                            sen_result[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>')
-                        }
-                    })
-                })
+// console.log();
+// console.log(arrrule.length,dict_idsentence.length);
+// console.log(sen_result.length);
+if (arrrule.length == dict_idsentence.length) {
+    sen_result.map(function (sen, i) {
+        if (i == 0) {
+            
+            sen_result[i] = '<span style=color:yellow>' + sen
+        }
+        console.log(i+1 , sen_result.length);
+         if (i+1 == sen_result.length) {
+            // console.log(sen_result[i]);
+            sen_result[i] = sen+ '</span>'
+        }
+    })
+   
+}else{
+// arrrule.map(function (num, idx) {
+    sen_result.map(function (sen, i) {
+        if (rule_based_name == sen) {
+            sen_result[i] = sen.replaceAll(sen, '<span style=color:yellow>' + sen + '</span>')
+        }
+    })
+// })
+dictname.map(function (num, idx) {
+    sen_result.map(function (sen, i) {
+        if (num == sen) {
+            sen_result[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>')
+        }
+    })
+})
+}
+                
+                
+
+                
                 var sumtext = sen_result.toString()
                 // console.log(sumtext);
                 sumtext = sumtext.replaceAll(',', '')
