@@ -38,9 +38,6 @@ app.use("/uploads", express.static("/uploads"));
 
 var upload = multer({ dest: __dirname + '/uploads/' });
 
-
-getdicts()
-getkeyword()
 var dictfile = 'customdict.txt'
 dicts = []
 arrdicts = []
@@ -48,18 +45,24 @@ arrkeyword = []
 front = 0
 back = 0
 
-function getdicts() {
+function getdicts(word) {
   dicts = []
   dictid = []
   arrdicts = []
-
+  // console.log(word);
+  if (word) {
+    dicts.push(word)
+  }
   axios.get(url + '/api/dicts?status=1').then((data) => {
     // console.log(data.data);
     arrdicts = data.data
     for (let d = 0; d < data.data.length; d++) {
       dicts.push(data.data[d].name)
       dictid.push(data.data[d].id)
+      
       if (d + 1 == data.data.length) {
+        
+        // console.log(dicts);
         const writeStream = fs.createWriteStream(dictfile);
         const pathName = writeStream.path;
 
@@ -130,7 +133,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/loaddict", async (req, res) => {
-  getdicts()
+  getdicts(req.query.word)
   getkeyword()
   getsetting()
   res.send('cut')
@@ -254,10 +257,11 @@ app.post("/checkfda", async (req, res) => {
 });
 
 app.get("/token", async (req, res) => {
-  var cut = token(req.query.text)
+// console.log(dicts);
+  var cut = await token(req.query.text)
   // console.log(cut);
   res.send(cut)
-});
+  });
 
 function getKeywordIdbyDicts(first_array, second_array) {
   let new_array = [];
@@ -306,10 +310,11 @@ app.post("/wordtokendesc", async (req, res) => {
 });
 
 function token(text) {
+  // console.log(dicts);
   wordcut.init(dictfile, true);
   var name_result = wordcut.cutIntoArray(text)
   // var result = name_result.filter((letter) => letter !== " ");
-// console.log(result);
+// console.log(name_result);
   return name_result
 }
 function getAllIndexes(arr, val) {

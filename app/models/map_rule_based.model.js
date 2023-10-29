@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-    this.status=datas.status;this.answer=datas.answer;
+    this.status=datas.status;this.answer=datas.answer;this.map_dict=datas.map_dict;
 this.advertise_id=datas.advertise_id;this.user=datas.user;this.keyword_id=datas.keyword_id};
 Data.create = (newData, result) => {
     // console.log(newData.dict_id);
@@ -11,6 +11,7 @@ Data.create = (newData, result) => {
         user:newData.user,
         answer:newData.answer,
         keyword_id:newData.keyword_id,
+        map_dict:JSON.stringify(newData.map_dict),
     }
     // console.log(data);
 sql.query("INSERT INTO map_rule_based SET ?", data, (err, res) => {
@@ -131,7 +132,7 @@ if (name) {
 query += ` WHERE dict_id = ${dict_namesql}`;
 }
 query += ' group by map_rule_based_id'
-console.log(query);
+// console.log(query);
 sql.query(query, async (err, res) => {
     for (let r = 0; r < res.length; r++) {
         
@@ -268,6 +269,39 @@ Data.updateanswer = (id, datas, result) => {
     }
     );
     };
+    
+    Data.updateweight = (id, datas, result) => {
+        sql.query(`SELECT * FROM map_rule_based WHERE id = ${id}`, (err, map) => {
+weight = map[0].weight +1
+console.log(map[0].map_advertise);
+var dummy = []
+if (map[0].map_advertise) {
+    dummy = JSON.parse(map[0].map_advertise) 
+    dummy.push(datas.advertise_id)
+}else{
+    dummy.push(datas.advertise_id)
+}
+
+console.log('dummy',dummy);
+map_advertise = JSON.stringify(dummy)
+// console.log(weight);
+// console.log(map_advertise);
+        sql.query(
+        "UPDATE map_rule_based SET weight = ?,map_advertise = ? WHERE id = ?",
+        [weight,map_advertise,id],(err, res) => {
+        if (err) {
+        result(null, err);
+        return;
+        }
+        if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+        };result(null, { id: id, ...datas });
+        }
+        );
+        
+    })
+        };
 
 Data.updateById = (id, datas, result) => {
 sql.query(

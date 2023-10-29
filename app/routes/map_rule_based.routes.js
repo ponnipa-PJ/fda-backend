@@ -21,6 +21,7 @@ router.put("/updateanswer/:id", datas.updateanswer);
 router.put("/:id", datas.update);
 
 router.put("/updatestatus/:id", datas.delete);
+router.put("/updateweight/:id", datas.updateweight);
 
 router.delete("/", datas.deleteAll);
 

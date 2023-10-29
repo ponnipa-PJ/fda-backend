@@ -1,4 +1,9 @@
 const sql = require("./db");
+const axios = require('axios');
+
+const url = 'http://localhost:8081'
+
+// const url = 'https://api-fda.ponnipa.in.th'
 
 const Data = function (datas) {
     this.name = datas.name;this.fda = datas.fda;this.product_status = datas.product_status;this.cat_status = datas.cat_status;this.fda_status = datas.fda_status;this.name_status = datas.name_status;this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
@@ -117,7 +122,7 @@ Data.getmapproduct = (newData, result) => {
 // console.log(sumone);
 var percent = (100 * sumone.length)/ (mapdict.length).toFixed(2)
 // console.log(percent);
-list.push({ 'allcount': percent, 'rule': mapdict, 'name': mapdictname })
+list.push({ 'allcount': percent, 'rule': mapdict, 'name': mapdictname,'map_id':besttokens[m].map_rule_based_id })
                                         // for (let s = 0; s < sum.length; s++) {
                                         //     if (sum[s] == 0) {
                                         //         allcount = allcount + 1
@@ -246,18 +251,36 @@ function array_move(arr, old_index, new_index) {
 Data.getbestrulebased = (newData, result) => {
     var list = []
     // console.log(newData);
-    sql.query(`SELECT * FROM advertise WHERE id = ${newData.id}`, (err, res) => {
+    var arrrule = newData.sentence.name
+                // console.log(newData.sentence);
+                var rule_based_name =arrrule.toString()
+                rule_based_name = rule_based_name.replaceAll(',', '')
+                
+    sql.query(`SELECT * FROM advertise WHERE id = ${newData.id}`, async (err, res) => {
         if (res.length != 0) {
             var dict_id = JSON.parse(res[0].keyword_dict_id)
+            var sen = res[0].sen
+            var sen_result = ''
+            // console.log(sen);
+            // console.log(rule_based_name);
+            // await axios.get(url + '/loaddict?word='+rule_based_name).then(async () => {
+            //   });
             var sqlquery = 'id = '
             for (let d = 0; d < dict_id.length; d++) {
                 if (d == 0) {
                     sqlquery += dict_id[d]
                 } else {
-                    sqlquery += ' or id = ' + dict_id[d]
+                    sqlquery += ' or id = ' + dict_id[d] 
                 }
 
             }
+            // console.log(rule_based_name);
+            await axios.get(url + '/token?text='+sen).then((data) => {
+                // console.log(data);
+                sen_result = data.data
+              });
+            //   console.log(sen_result);
+
             // console.log(`SELECT * FROM dicts WHERE ${sqlquery}`);
             sql.query(`SELECT * FROM dicts WHERE ${sqlquery}`, (err, dict) => {
                 var dictname = []
@@ -266,31 +289,39 @@ Data.getbestrulebased = (newData, result) => {
                     dictname.push(num.name)
                 })
                 // console.log(dictname);
+
                 var sentent = JSON.parse(res[0].dict_name)
                 var sumtext = sentent.toString()
                 // console.log(sumtext);
                 sumtext = sumtext.replaceAll(',', '')
-                var arrrule = newData.sentence.name
-                // console.log(arrrule);
-
-                arrrule.map(function (num, idx) {
-                    sentent.map(function (sen, i) {
-                        if (num == sen) {
-                            sentent[i] = num.replaceAll(sen, '<span style=color:yellow>' + sen + '</span>')
+                // var arrrule = newData.sentence.name
+                // console.log(newData.sentence);
+                // var rule_based_name =arrrule.toString()
+                // rule_based_name = rule_based_name.replaceAll(',', '')
+//                 console.log(rule_based_name);
+// console.log(sen_result);
+                // arrrule.map(function (num, idx) {
+                    sen_result.map(function (sen, i) {
+                        if (rule_based_name == sen) {
+                        // if (num == sen && arrrule[idx+1] == sen_result[i+1]) {
+                            // console.log(arrrule[idx+1]);
+                            // console.log(sen_result[i+1]);
+                            sen_result[i] = rule_based_name.replaceAll(rule_based_name, '<span style=color:yellow>' + rule_based_name + '</span>')
+                            // sen_result[i+1] = num.replaceAll(sen+1, '<span style=color:yellow>' + sen+1 + '</span>')
                         }
                     })
-                })
+                // })
                 dictname.map(function (num, idx) {
-                    sentent.map(function (sen, i) {
+                    sen_result.map(function (sen, i) {
                         if (num == sen) {
-                            sentent[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>')
+                            sen_result[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>')
                         }
                     })
                 })
-                var sumtext = sentent.toString()
+                var sumtext = sen_result.toString()
                 // console.log(sumtext);
                 sumtext = sumtext.replaceAll(',', '')
-                list = { 'sentence': sumtext, 'count': newData.sentence.allcount, 'rule_based_id': newData.sentence.rule, 'rule_based_name': newData.sentence.name }
+                list = { 'sentence': sumtext, 'count': newData.sentence.allcount, 'rule_based_id': newData.sentence.rule, 'rule_based_name': newData.sentence.name ,'map_id':newData.sentence.map_id}
 
                 //     sentent.map(function (num, idx) {
                 //     for (let n = 0; n < arrrule.length; n++) {
@@ -319,6 +350,85 @@ Data.getbestrulebased = (newData, result) => {
         }, 2000);
     });
 }
+
+// Data.getbestrulebased = (newData, result) => {
+//     var list = []
+//     // console.log(newData);
+//     sql.query(`SELECT * FROM advertise WHERE id = ${newData.id}`, (err, res) => {
+//         if (res.length != 0) {
+//             var dict_id = JSON.parse(res[0].keyword_dict_id)
+//             var sen = res[0].sen
+//             var sqlquery = 'id = '
+//             for (let d = 0; d < dict_id.length; d++) {
+//                 if (d == 0) {
+//                     sqlquery += dict_id[d]
+//                 } else {
+//                     sqlquery += ' or id = ' + dict_id[d]
+//                 }
+
+//             }
+//             // console.log(`SELECT * FROM dicts WHERE ${sqlquery}`);
+//             sql.query(`SELECT * FROM dicts WHERE ${sqlquery}`, (err, dict) => {
+//                 var dictname = []
+//                 dict.map(function (num, idx) {
+//                     // console.log(num.name);
+//                     dictname.push(num.name)
+//                 })
+//                 // console.log(dictname);
+
+//                 var sentent = JSON.parse(res[0].dict_name)
+//                 var sumtext = sentent.toString()
+//                 // console.log(sumtext);
+//                 sumtext = sumtext.replaceAll(',', '')
+//                 var arrrule = newData.sentence.name
+//                 // console.log(arrrule);
+
+//                 arrrule.map(function (num, idx) {
+//                     sentent.map(function (sen, i) {
+//                         if (num == sen) {
+//                             sentent[i] = num.replaceAll(sen, '<span style=color:yellow>' + sen + '</span>')
+//                         }
+//                     })
+//                 }) 
+//                 dictname.map(function (num, idx) {
+//                     sentent.map(function (sen, i) {
+//                         if (num == sen) {
+//                             sentent[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>')
+//                         }
+//                     })
+//                 })
+//                 var sumtext = sentent.toString()
+//                 // console.log(sumtext);
+//                 sumtext = sumtext.replaceAll(',', '')
+//                 list = { 'sentence': sumtext, 'count': newData.sentence.allcount, 'rule_based_id': newData.sentence.rule, 'rule_based_name': newData.sentence.name ,'map_id':newData.sentence.map_id}
+
+//                 //     sentent.map(function (num, idx) {
+//                 //     for (let n = 0; n < arrrule.length; n++) {
+//                 //         if (num == arrrule[n]) {
+//                 //             sentent[idx] = num.replaceAll(arrrule[n], '<span style=color:yellow>' + arrrule[n] + '</span>')
+//                 //         }
+//                 //         if (n+1 == arrrule.length) {
+//                 //             var sumtext = sentent.toString()
+//                 //     console.log(sumtext);
+//                 //     sumtext = sumtext.replaceAll(',', '')
+//                 //             list = {'sentence':sumtext,'count':newData.sentence.allcount,'rule_based_id':newData.sentence.rule
+//                 //             }
+//                 //         }
+//                 //     }
+
+//                 // });
+//             });
+//         }
+
+//         if (err) {
+//             result(err, null);
+//             return;
+//         }
+//         setTimeout(async () => {
+//             result(null, list);
+//         }, 2000);
+//     });
+// }
 
 Data.getproductkeyword = (newData, result) => {
     // console.log(newData);

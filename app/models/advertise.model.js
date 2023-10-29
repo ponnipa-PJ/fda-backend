@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-    this.rule_based_name=datas.rule_based_name;this.rule_based_id=datas.rule_based_id;this.sentence_rulebase=datas.sentence_rulebase;this.count_rulebased=datas.count_rulebased;this.dict_name=datas.dict_name;this.keyword_dict_id=datas.keyword_dict_id;this.product_id=datas.product_id;this.dict_id=datas.dict_id;this.sen=datas.sen;this.sentent=datas.sentent;this.product_token_id=datas.product_token_id;};
+    this.map_rule_based_id=datas.map_rule_based_id;this.rule_based_name=datas.rule_based_name;this.rule_based_id=datas.rule_based_id;this.sentence_rulebase=datas.sentence_rulebase;this.count_rulebased=datas.count_rulebased;this.dict_name=datas.dict_name;this.keyword_dict_id=datas.keyword_dict_id;this.product_id=datas.product_id;this.dict_id=datas.dict_id;this.sen=datas.sen;this.sentent=datas.sentent;this.product_token_id=datas.product_token_id;};
 Data.create = (newData, result) => {
     var data = {
         product_token_id:newData.product_token_id,
@@ -97,7 +97,8 @@ Data.updaterulebased = (id, datas, result) => {
     var sentence_rulebase = JSON.stringify(datas.sentence_rulebase)
     var rule_based_id = JSON.stringify(datas.rule_based_id)
     var rule_based_name = JSON.stringify(datas.rule_based_name)
-    sql.query(`UPDATE advertise SET count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`, (err, res) => {
+    // console.log(`UPDATE advertise SET map_rule_based_id= ${datas.map_rule_based_id} ,count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`);
+    sql.query(`UPDATE advertise SET map_rule_based_id= ${datas.map_rule_based_id} ,count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`, (err, res) => {
     console.log(err);
 if (err) {
 result(null, err);
