@@ -1,12 +1,12 @@
 const sql = require("./db");
 const axios = require('axios');
 
-const url = 'http://localhost:8081'
+// const url = 'http://localhost:8081'
 
-// const url = 'https://api-fda.ponnipa.in.th'
+const url = 'https://api-fda.ponnipa.in.th'
 
 const Data = function (datas) {
-    this.name = datas.name;this.fda = datas.fda;this.product_status = datas.product_status;this.cat_status = datas.cat_status;this.fda_status = datas.fda_status;this.name_status = datas.name_status;this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
+    this.name = datas.name; this.fda = datas.fda; this.product_status = datas.product_status; this.cat_status = datas.cat_status; this.fda_status = datas.fda_status; this.name_status = datas.name_status; this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
 };
 Data.create = (newData, result) => {
     var data = {
@@ -77,7 +77,7 @@ Data.getmapproduct = (newData, result) => {
                                 // console.log(indexesall);
                                 for (let idx = 0; idx < indexesall.length; idx++) {
                                     indexmapdict = mapdict.indexOf(mapid[did])
-                                    indexdictid = indexesall[idx] 
+                                    indexdictid = indexesall[idx]
                                     realrule = []
                                     mapdict.map((myArr, index) => {
                                         realrule.push(0)
@@ -91,7 +91,7 @@ Data.getmapproduct = (newData, result) => {
                                     // console.log(besttokens[m].map_rule_based_id);
                                     // console.log(indexmapdict, indexdictid);
                                     // console.log(realrule);
-                                        // console.log(mapdict);
+                                    // console.log(mapdict);
                                     //     console.log(dict_id);
                                     if (indexmapdict <= indexdictid) {
 
@@ -119,10 +119,10 @@ Data.getmapproduct = (newData, result) => {
 
                                         allcount = 0
                                         var sumone = getAllIndexes(sum, 0);
-// console.log(sumone);
-var percent = (100 * sumone.length)/ (mapdict.length).toFixed(2)
-// console.log(percent);
-list.push({ 'length': mapdict.length,'allcount': percent, 'rule': mapdict, 'name': mapdictname,'map_id':besttokens[m].map_rule_based_id })
+                                        // console.log(sumone);
+                                        var percent = (100 * sumone.length) / (mapdict.length).toFixed(2)
+                                        // console.log(percent);
+                                        list.push({ 'length': mapdict.length, 'allcount': percent, 'rule': mapdict, 'name': mapdictname, 'map_id': besttokens[m].map_rule_based_id })
                                         // for (let s = 0; s < sum.length; s++) {
                                         //     if (sum[s] == 0) {
                                         //         allcount = allcount + 1
@@ -252,10 +252,10 @@ Data.getbestrulebased = (newData, result) => {
     var list = []
     // console.log(newData);
     var arrrule = newData.sentence.name
-                // console.log(newData.sentence);
-                var rule_based_name =arrrule.toString()
-                rule_based_name = rule_based_name.replaceAll(',', '')
-                
+    // console.log(newData.sentence);
+    var rule_based_name = arrrule.toString()
+    rule_based_name = rule_based_name.replaceAll(',', '')
+
     sql.query(`SELECT * FROM advertise WHERE id = ${newData.id}`, async (err, res) => {
         if (res.length != 0) {
             var dict_id = JSON.parse(res[0].keyword_dict_id)
@@ -271,76 +271,75 @@ Data.getbestrulebased = (newData, result) => {
                 if (d == 0) {
                     sqlquery += dict_id[d]
                 } else {
-                    sqlquery += ' or id = ' + dict_id[d] 
+                    sqlquery += ' or id = ' + dict_id[d]
                 }
 
             }
             // console.log(rule_based_name);
-            await axios.get(url + '/token?text='+sen).then((data) => {
+            await axios.get(url + '/token?text=' + sen).then((data) => {
                 // console.log(data);
                 sen_result = data.data
-              });
+            });
             //   console.log(sen_result);
 
             // console.log(`SELECT * FROM dicts WHERE ${sqlquery}`);
             sql.query(`SELECT * FROM dicts WHERE ${sqlquery}`, (err, dict) => {
-                var dictname = []
+                var dictname = [];
                 dict.map(function (num, idx) {
                     // console.log(num.name);
-                    dictname.push(num.name)
-                })
+                    dictname.push(num.name);
+                });
                 // console.log(dictname);
-
-                var sentent = JSON.parse(res[0].dict_name)
-                var sumtext = sentent.toString()
+                var sentent = JSON.parse(res[0].dict_name);
+                var sumtext = sentent.toString();
                 // console.log(sumtext);
-                sumtext = sumtext.replaceAll(',', '')
+                sumtext = sumtext.replaceAll(',', '');
                 // var arrrule = newData.sentence.name
                 // console.log(newData.sentence);
                 // var rule_based_name =arrrule.toString()
                 // rule_based_name = rule_based_name.replaceAll(',', '')
-//                 console.log(rule_based_name);
-// console.log(sen_result);
-// console.log();
-// console.log(arrrule.length,dict_idsentence.length);
-// console.log(sen_result.length);
-if (arrrule.length == dict_idsentence.length) {
-    sen_result.map(function (sen, i) {
-        if (i == 0) {
-            
-            sen_result[i] = '<span style=color:yellow>' + sen
-        }
-        console.log(i+1 , sen_result.length);
-         if (i+1 == sen_result.length) {
-            // console.log(sen_result[i]);
-            sen_result[i] = sen+ '</span>'
-        }
-    })
-   
-}else{
-// arrrule.map(function (num, idx) {
-    sen_result.map(function (sen, i) {
-        if (rule_based_name == sen) {
-            sen_result[i] = sen.replaceAll(sen, '<span style=color:yellow>' + sen + '</span>')
-        }
-    })
-// })
-dictname.map(function (num, idx) {
-    sen_result.map(function (sen, i) {
-        if (num == sen) {
-            sen_result[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>')
-        }
-    })
-})
-}
-                
-                
+                //                 console.log(rule_based_name);
+                // console.log(sen_result);
+                // console.log();
+                // console.log(arrrule.length,dict_idsentence.length);
+                // console.log(sen_result.length);
+                if (arrrule.length == dict_idsentence.length) {
+                    sen_result.map(function (sen, i) {
+                        if (i == 0) {
 
-                
-                var sumtext = sen_result.toString()
+                            sen_result[i] = '<span style=color:yellow>' + sen;
+                        }
+                        console.log(i + 1, sen_result.length);
+                        if (i + 1 == sen_result.length) {
+                            // console.log(sen_result[i]);
+                            sen_result[i] = sen + '</span>';
+                        }
+                    });
+
+                } else {
+                    // arrrule.map(function (num, idx) {
+                    sen_result.map(function (sen, i) {
+                        if (rule_based_name == sen) {
+                            sen_result[i] = sen.replaceAll(sen, '<span style=color:yellow>' + sen + '</span>');
+                        }
+                    });
+                    // })
+                    dictname.map(function (num, idx) {
+                        sen_result.map(function (sen, i) {
+                            if (num == sen) {
+                                sen_result[i] = num.replaceAll(sen, '<span style=color:red>' + sen + '</span>');
+                            }
+                        });
+                    });
+                }
+
+
+
+
+                var sumtext = sen_result.toString();
                 // console.log(sumtext);
-                sumtext = sumtext.replaceAll(',', '')
-                list = { 'sentence': sumtext, 'count': newData.sentence.allcount, 'rule_based_id': newData.sentence.rule, 'rule_based_name': newData.sentence.name ,'map_id':newData.sentence.map_id}
+                sumtext = sumtext.replaceAll(',', '');
+                list = { 'sentence': sumtext, 'count': newData.sentence.allcount, 'rule_based_id': newData.sentence.rule, 'rule_based_name': newData.sentence.name, 'map_id': newData.sentence.map_id };
 
                 //     sentent.map(function (num, idx) {
                 //     for (let n = 0; n < arrrule.length; n++) {
@@ -355,7 +354,6 @@ dictname.map(function (num, idx) {
                 //             }
                 //         }
                 //     }
-
                 // });
             });
         }
@@ -499,7 +497,7 @@ Data.getproductkeyword = (newData, result) => {
 Data.getproduct = (newData, result) => {
     // console.log(newData);
     sql.query(`SELECT * FROM product_token WHERE url = "${newData.url}"`, (err, res) => {
-        // console.log(`SELECT * FROM product_token WHERE url = "${newData.url}"`);
+        console.log(`SELECT * FROM product_token WHERE url = "${newData.url}"`);
         // console.log(res[0]);
         if (res.length != 0) {
             let query = `SELECT a.* FROM advertise a where a.product_token_id = ${res[0].id} order by count_rulebased,rule_based_id LIMIT 1`;
@@ -510,17 +508,17 @@ Data.getproduct = (newData, result) => {
             sql.query(query, async (err, des) => {
                 // console.log(des);
                 res[0].keyword = des
-                    let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
-                    if (newData.id) {
-                        getmap += ` and user = ${newData.id}`
+                let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
+                if (newData.id) {
+                    getmap += ` and user = ${newData.id}`
+                }
+                sql.query(getmap, async (err, getmaps) => {
+                    if (getmaps.length > 0) {
+                        res[0].keyword[0].answer = getmaps[0].answer
+                        res[0].keyword[0].mapId = getmaps[0].id
                     }
-                    sql.query(getmap, async (err, getmaps) => {
-                        if (getmaps.length > 0) {
-                            res[0].keyword[0].answer = getmaps[0].answer
-                            res[0].keyword[0].mapId = getmaps[0].id
-                        }
 
-                    })
+                })
                 var arrrule = []
                 // for (let d = 0; d < res[0].keyword.length; d++) {
                 //     var jsonkeyword = JSON.parse(res[0].keyword[d].keyword_dict_id)
