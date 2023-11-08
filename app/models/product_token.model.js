@@ -496,8 +496,8 @@ Data.getproductkeyword = (newData, result) => {
 
 Data.getproduct = (newData, result) => {
     // console.log(newData);
-    sql.query(`SELECT * FROM product_token WHERE url = "${newData.url}"`, (err, res) => {
-        // console.log(`SELECT * FROM product_token WHERE url = "${newData.url}"`);
+    sql.query(`SELECT * FROM product_token WHERE id = "${newData.id}"`, (err, res) => {
+        // console.log(`SELECT * FROM product_token WHERE id = "${newData.id}"`);
         // console.log(res[0]);
         if (res.length != 0) {
             let query = `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id} order by count_rulebased,rule_based_id LIMIT 1`;
@@ -507,6 +507,7 @@ Data.getproduct = (newData, result) => {
             // console.log(query);
             sql.query(query, async (err, des) => {
                 // console.log(des);
+                if (des.length != 0) {
                 res[0].keyword = des
                 let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
                 if (newData.id) {
@@ -543,7 +544,9 @@ Data.getproduct = (newData, result) => {
                 //         });
                 //         }
                 // }               
-
+            }else{
+                res[0].keyword = 1
+            }
             });
         }
 
