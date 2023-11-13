@@ -21,12 +21,13 @@ keywords_name = []
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
-// const url = 'http://localhost:8081'
-const url = 'https://api-fda.ponnipa.in.th'
+const url = 'http://localhost:8081'
+// const url = 'https://api-fda.ponnipa.in.th'
 
 app.use(cors(corsOptions));
 
 var bodyParser = require('body-parser');
+const { log } = require("console");
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
@@ -92,11 +93,11 @@ function getsetting() {
     back = data.data.back_space
   });
 }
-function getkeyword() {
+async function getkeyword() {
   keywords_id = []
   keywords_name = []
   arrkeyword = []
-  axios.get(url + '/api/keyword_dicts?status=1').then((data) => {
+  await axios.get(url + '/api/keyword_dicts?status=1').then((data) => {
     // console.log(data.data);
     arrkeyword = data.data
     for (let d = 0; d < data.data.length; d++) {
@@ -133,9 +134,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/loaddict", async (req, res) => {
-  getdicts(req.query.word)
-  getkeyword()
-  getsetting()
+  await getdicts(req.query.word)
+  await getkeyword()
+  await getsetting()
   res.send('cut')
 })
 
@@ -185,16 +186,18 @@ app.post("/checkfda", async (req, res) => {
   });  
   var indexlist = []
   // console.log(intersectiondata);
+
   for (let i = 0; i < intersectiondata.length; i++) {
     if (intersectiondata[i]!= 'อาหาร' && intersectiondata[i]!= 'ผลิตภัณฑ์' && intersectiondata[i]!= 'เสริม' && intersectiondata[i]!= 'เครื่องดื่ม' && intersectiondata[i]!= 'ชนิด' && intersectiondata[i]!= '(' && intersectiondata[i]!= ')') {
       // console.log(intersectiondata[i]);
       allindex = getAllIndexes(contenttoken, intersectiondata[i])
         for (let a = 0; a < allindex.length; a++) {
+          // indexlist.push(allindex[0])
           indexlist.push(allindex[a])
         }
     }
   }
-  // console.log(indexlist);
+  // console.log('indexlist',indexlist);
   var countarray = 0
   var listarr = ''
   // console.log(contenttoken);
@@ -278,6 +281,7 @@ function getKeywordIdbyDicts(first_array, second_array) {
 }
 
 app.post("/wordtokendesc", async (req, res) => {
+  await getkeyword()
   // var name = req.query.text
   var name = req.body.content
   // console.log(name);
@@ -288,6 +292,7 @@ app.post("/wordtokendesc", async (req, res) => {
   // console.log(dictkeyall);
   listfull = []
   const uniquekeyword = name_result.filter(element => keywords_name.includes(element));
+  // console.log(uniquekeyword);
   let intersectiondata = uniquekeyword.filter((c, index) => {
     return uniquekeyword.indexOf(c) === index;
   });  
@@ -295,6 +300,7 @@ app.post("/wordtokendesc", async (req, res) => {
 
   sumtext = name_result.toString()
   sumtext = sumtext.replaceAll(',', '')
+  // console.log(sumtext);
   for (let k = 0; k < intersectiondata.length; k++) {
     sumtext = sumtext.replaceAll(intersectiondata[k], '<span style="color:red">' + intersectiondata[k] + '</span>')
 
@@ -424,7 +430,7 @@ app.post("/checkkeyword", async (req, res) => {
   }
   // console.log(sentent);
   // console.log(listarr);
-  console.log(dict_id);
+  // console.log(dict_id);
   // console.log(keyword_dict_id);
 
   jsonData = []
@@ -499,7 +505,7 @@ async function createdictsDict(words) {
       await axios.get(url+'/api/dicts?name=' + words[w]).then(async (res) => {
         // console.log(res.data);
         if (res.data.length == 1) {
-          // console.log(res.data[0].id);
+          // console.log('id',res.data[0].id);
           dictlist.push(res.data[0].id);
         } else {
           // console.log(1);
@@ -507,8 +513,13 @@ async function createdictsDict(words) {
             name: words[w],
             status: 1
           }
+          // console.log(words[w]);
           await axios.post(url+'/api/dicts', dict).then((res) => {
-            dictlist.push(res.data.id);
+            // console.log('newid',);
+            if (res.data.id) {
+              dictlist.push(res.data.id);
+              
+            }
           })
         }
       });

@@ -11,6 +11,8 @@ router.get("/:id", datas.findOne);
 
 router.put("/updatedictid/:id", datas.updatedictid);
 
+router.put("/updateweight/:id", datas.updateweight);
+
 router.put("/:id", datas.update);
 
 router.delete("/:id", datas.delete);

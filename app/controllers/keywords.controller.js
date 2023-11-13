@@ -8,7 +8,7 @@ message: 'Content can not be empty!'
 }
 
 const datas = new Data({
-name:req.body.name,token:req.body.token,status:req.body.status,dict_id:req.body.dict_id,dict_name:req.body.dict_name});
+    weight:req.body.weight,name:req.body.name,token:req.body.token,status:req.body.status,dict_id:req.body.dict_id,dict_name:req.body.dict_name});
 Data.create(datas, (err, data) => {
 if (err)
 res.status(500).send({
@@ -39,6 +39,27 @@ res.send([])
 } else res.send(data);
 });
 };
+
+
+exports.updateweight = (req, res) => {
+    if (!req.body) {
+    res.status(400).send({
+    message: 'Content can not be empty!'
+    });
+    }
+    
+    Data.updateweight(
+    req.params.id,
+    new Data(req.body),
+    (err, data) => {
+    if (err) {
+    if (err.kind === "not_found") {
+    res.send([]);
+    }
+    } else res.send(data);
+    }
+    );
+    };
 
 exports.updatedictid = (req, res) => {
     if (!req.body) {

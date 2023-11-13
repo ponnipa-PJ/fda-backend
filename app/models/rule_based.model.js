@@ -4,6 +4,7 @@ const Data = function (datas) {
 this.map_rule_based_id=datas.map_rule_based_id;this.dict_id=datas.dict_id;this.dict_name=datas.dict_name;this.no=datas.no;};
 Data.create = (newData, result) => {
 sql.query("INSERT INTO rule_based SET ?", newData, (err, res) => {
+    console.log(err);
 if (err) {
 result(err, null);
 return;

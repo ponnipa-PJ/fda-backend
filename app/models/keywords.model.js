@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-this.name=datas.name;this.token=datas.token;this.status=datas.status;this.dict_id=datas.dict_id;this.dict_name=datas.dict_name;};
+    this.weight=datas.weight;this.name=datas.name;this.token=datas.token;this.status=datas.status;this.dict_id=datas.dict_id;this.dict_name=datas.dict_name;};
 Data.create = (newData, result) => {
 sql.query("INSERT INTO keywords SET ?", newData, (err, res) => {
 if (err) {
@@ -38,6 +38,39 @@ return;
 result({ kind: "not_found" }, null);
 });
 };
+
+Data.updateweight = (id, datas, result) => {
+    // console.log(datas.name);
+    var name = datas.name.replaceAll('[','(')
+    name = name.replaceAll(']',')')
+    // console.log(name);
+    // console.log(`select k.* from dicts d join keyword_dicts k on k.name = d.name where d.id IN ${name} `);
+    sql.query(
+        `select k.* from dicts d join keyword_dicts k on k.name = d.name where d.id IN ${name} `,(err, res) => {
+            // console.log(res);
+            
+            if (res.length >0 ) {
+                for (let k = 0; k < res.length; k++) {
+            weight = res[k].weight +1
+            sql.query(
+                `UPDATE keyword_dicts SET weight = ${weight} WHERE id = ${res[k].id} `,(err, res) => {
+                });
+                }
+                
+            }
+            // console.log(weight);
+  
+    if (err) {
+    result(null, err);
+    return;
+    }
+    if (res.affectedRows == 0) {
+    result({ kind: "not_found" }, null);
+    return;
+    };result(null, { id: id, ...datas });
+    }
+    );
+    };
 
 Data.updatedictid = (id, datas, result) => {
     //console.log(datas.dict_id);
