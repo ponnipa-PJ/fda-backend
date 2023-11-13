@@ -51,6 +51,7 @@ Data.updateweight = (id, datas, result) => {
             
             if (res.length >0 ) {
                 for (let k = 0; k < res.length; k++) {
+                    weight = 0
             weight = res[k].weight +1
             sql.query(
                 `UPDATE keyword_dicts SET weight = ${weight} WHERE id = ${res[k].id} `,(err, res) => {

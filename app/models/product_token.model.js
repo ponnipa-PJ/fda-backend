@@ -500,7 +500,7 @@ Data.getproduct = (newData, result) => {
         // console.log(`SELECT * FROM product_token WHERE id = "${newData.id}"`);
         // console.log(res[0]);
         if (res.length != 0) {
-            let query = `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id} order by count_rulebased,rule_based_id LIMIT 1`;
+            let query = `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id} order by count_rulebased,rule_based_id`;
             // if (newData.id) {
             //     query += ` and m.user = ${newData.id}`
             // }
@@ -509,17 +509,17 @@ Data.getproduct = (newData, result) => {
                 // console.log(des);
                 if (des.length != 0) {
                 res[0].keyword = des
-                let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
-                if (newData.id) {
-                    getmap += ` and user = ${newData.id}`
-                }
-                sql.query(getmap, async (err, getmaps) => {
-                    if (getmaps.length > 0) {
-                        res[0].keyword[0].answer = getmaps[0].answer
-                        res[0].keyword[0].mapId = getmaps[0].id
-                    }
+                // let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
+                // if (newData.id) {
+                //     getmap += ` and user = ${newData.id}`
+                // }
+                // sql.query(getmap, async (err, getmaps) => {
+                //     if (getmaps.length > 0) {
+                //         res[0].keyword[0].answer = getmaps[0].answer
+                //         res[0].keyword[0].mapId = getmaps[0].id
+                //     }
 
-                })
+                // })
                 var arrrule = []
                 // for (let d = 0; d < res[0].keyword.length; d++) {
                 //     var jsonkeyword = JSON.parse(res[0].keyword[d].keyword_dict_id)
