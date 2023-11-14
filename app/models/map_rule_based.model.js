@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 const Data = function (datas) {
-    this.statusfalse=datas.statusfalse;this.statustrue=datas.statustrue;this.status=datas.status;this.answer=datas.answer;this.map_dict=datas.map_dict;
+    this.map_advertise=datas.map_advertise;this.weight=datas.weight;this.statusfalse=datas.statusfalse;this.statustrue=datas.statustrue;this.status=datas.status;this.answer=datas.answer;this.map_dict=datas.map_dict;
 this.advertise_id=datas.advertise_id;this.user=datas.user;this.keyword_id=datas.keyword_id};
 Data.create = (newData, result) => {
     // console.log(newData.dict_id);
@@ -14,8 +14,10 @@ Data.create = (newData, result) => {
         map_dict:JSON.stringify(newData.map_dict),
         statusfalse:newData.statusfalse,
         statustrue:newData.statustrue,
+        weight:newData.weight,
+        map_advertise:JSON.stringify(newData.map_advertise)
     }
-    // console.log(data);
+    console.log(data);
 sql.query("INSERT INTO map_rule_based SET ?", data, (err, res) => {
     console.log(err);
 if (err) {
@@ -115,7 +117,7 @@ setTimeout(() => {
 Data.checkintb = (name, result) => {
     var list= {}
     var dict_id =[]
-    console.log(name);
+    // console.log(name);
     var namefull = JSON.parse(name)
     var dict_namesql = ''
     for (let n = 0; n < namefull.length; n++) {
@@ -134,7 +136,7 @@ if (name) {
 query += ` WHERE map_dict = '[${namefull}]'`;
 }
 // query += ' group by map_rule_based_id'
-console.log(query);
+// console.log(query);
 sql.query(query, async (err, res) => {
 //     for (let r = 0; r < res.length; r++) {
         
@@ -258,9 +260,15 @@ result({ kind: "not_found" }, null);
 
 Data.updateanswer = (id, datas, result) => {
     console.log(datas);
+    // console.log(JSON.stringify(datas.advertise_id));
+    // var map_advertiseget = []
+    // map_advertiseget = JSON.parse(datas.advertise_id)
+    // console.log(map_advertiseget);
+    var map_advertise = JSON.stringify(datas.map_advertise)
+    console.log(map_advertise);
     sql.query(
-    "UPDATE map_rule_based SET answer = ?, statusfalse = ?,statustrue = ? WHERE id = ?",
-    [datas.answer,datas.statusfalse,datas.statustrue,id],(err, res) => {
+    "UPDATE map_rule_based SET answer = ?, statusfalse = ?,statustrue = ?, map_advertise = ?, weight = ? WHERE id = ?",
+    [datas.answer,datas.statusfalse,datas.statustrue,map_advertise,datas.weight,id],(err, res) => {
     if (err) {
     result(null, err);
     return;
