@@ -17,7 +17,7 @@ Data.create = (newData, result) => {
         weight:newData.weight,
         map_advertise:JSON.stringify(newData.map_advertise)
     }
-    console.log(data);
+    // console.log(data);
 sql.query("INSERT INTO map_rule_based SET ?", data, (err, res) => {
     console.log(err);
 if (err) {
@@ -265,7 +265,7 @@ Data.updateanswer = (id, datas, result) => {
     // map_advertiseget = JSON.parse(datas.advertise_id)
     // console.log(map_advertiseget);
     var map_advertise = JSON.stringify(datas.map_advertise)
-    console.log(map_advertise);
+    // console.log(map_advertise);
     sql.query(
     "UPDATE map_rule_based SET answer = ?, statusfalse = ?,statustrue = ?, map_advertise = ?, weight = ? WHERE id = ?",
     [datas.answer,datas.statusfalse,datas.statustrue,map_advertise,datas.weight,id],(err, res) => {
