@@ -63,7 +63,7 @@ Data.updateweight = (id, datas, result) => {
                         typeId.push(datas.typeId)
                     }else{
                         var status = typeId.includes(datas.typeId)
-                        console.log(status);
+                        // console.log(status);
                 if (!status) {
                     typeId.push(datas.typeId)
                 }

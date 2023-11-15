@@ -55,7 +55,7 @@ Data.getmapproduct = (newData, result) => {
             var arrbestname = []
             var allcount = 0
             var countzero = 1
-            let besttoken = `SELECT map_rule_based_id FROM rule_based r LEFT JOIN map_rule_based m on r.map_rule_based_id = m.id where r.dict_id = ${mapid[did]} and m.status=1`;
+            let besttoken = `SELECT map_rule_based_id FROM rule_based r LEFT JOIN map_rule_based m on r.map_rule_based_id = m.id where r.dict_id = ${mapid[did]}`;
             // let besttoken = `SELECT dict_id FROM rule_based where map_rule_based_id = ${mapid[did].map_rule_based_id} order by no`;
             // console.log(besttoken);
             sql.query(besttoken, async (err, besttokens) => {

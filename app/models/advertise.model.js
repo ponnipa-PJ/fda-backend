@@ -97,8 +97,9 @@ Data.updaterulebased = (id, datas, result) => {
     var sentence_rulebase = JSON.stringify(datas.sentence_rulebase)
     var rule_based_id = JSON.stringify(datas.rule_based_id)
     var rule_based_name = JSON.stringify(datas.rule_based_name)
+    var count_rulebased = datas.count_rulebased.toFixed(2)
     // console.log(`UPDATE advertise SET map_rule_based_id= ${datas.map_rule_based_id} ,count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`);
-    sql.query(`UPDATE advertise SET map_rule_based_id= ${datas.map_rule_based_id} ,count_rulebased = ${datas.count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`, (err, res) => {
+    sql.query(`UPDATE advertise SET map_rule_based_id= ${datas.map_rule_based_id} ,count_rulebased = ${count_rulebased} , rule_based_id = '${rule_based_id}', rule_based_name = '${rule_based_name}', sentence_rulebase = ${sentence_rulebase} WHERE id = ${id}`, (err, res) => {
     console.log(err);
 if (err) {
 result(null, err);

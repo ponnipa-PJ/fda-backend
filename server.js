@@ -211,11 +211,11 @@ app.post("/checkfda", async (req, res) => {
       var findindexfore = contenttoken.slice([backward], indexlist[u])
       // var findindexlastname = contenttoken.slice(indexlist[u],contenttoken.length)
       // console.log(findindexfore);
-      var forward = findforward(contenttoken, indexlist[u], 3)
-      var findindexback = contenttoken.slice(indexlist[u], forward)
+      var forward = findcutfront(contenttoken, indexlist[u], 3)
+      // var findindexback = contenttoken.slice(indexlist[u], forward)
       // console.log(contenttoken[forward]);
       // console.log(findindexback);
-      var arrtoken = findindexfore.concat(findindexback);
+      var arrtoken = findindexfore.concat(forward);
       // console.log(arrtoken);
       listarr = arrtoken
       countarray = forward
@@ -377,11 +377,11 @@ app.post("/checkkeyword", async (req, res) => {
       var findindexfore = name_result.slice([backward], uniqueindex[u])
       // var findindexlastname = name_result.slice(uniqueindex[u],name_result.length)
       // console.log(findindexfore);
-      var forward = findforward(name_result, uniqueindex[u], back)
-      var findindexback = name_result.slice(uniqueindex[u], forward)
+      var forward = findcutfront(name_result, uniqueindex[u], back)
+      // var findindexback = name_result.slice(uniqueindex[u], forward)
       // console.log(forward);
       // console.log(findindexback);
-      var arrtoken = findindexfore.concat(findindexback);
+      var arrtoken = findindexfore.concat(forward);
       // console.log(arrtoken);
       sen = arrtoken.toString()
       sen = sen.replaceAll(',', '')
@@ -480,6 +480,34 @@ app.post("/checkkeyword", async (req, res) => {
 });
 
 
+function findcutfront(name_result, index, back) {
+  // console.log(name_result);
+  // console.log(index);
+  // console.log(back);
+  var newsen = name_result.slice(index,name_result.length)
+  // console.log(newsen);
+var sen = newsen.toString()
+// console.log(sen);
+sen = sen.replaceAll(',','')
+// console.log(sen);
+var split = sen.split(" ")
+// console.log(split);
+split = split.filter(n => n)
+// console.log(split);
+var arr = []
+if (split.length > 0) {
+  for (let s = 0; s < split.length; s++) {
+    if (s < back) {
+      arr.push(split[s])
+      arr.push(' ')
+    }
+  }
+}
+// console.log(split);
+// console.log(arr.toString());
+return arr
+}
+
 function getDictIdKeyword(first_array, second_array) {
   let new_array = [];
   for (let i = 0; i < first_array.length; i++) {
@@ -559,7 +587,7 @@ function findbackward(array, index, setting) {
     // console.log('mb',mb);
     if (cb < (array.length)) {
       // console.log(array[cb]);
-      if (array[cb] == ' ') {
+      if (array[cb] == ' ' || array[cb] == '   ') {
         bc = bc + 1
       }
       if (cb == 0) {

@@ -26,6 +26,32 @@ return;
 result(null, res);
 });
 };
+Data.getweightrulebasemax = (name, result) => {
+    let query = "SELECT MAX(weight) as max FROM map_rule_based LIMIT 1;";
+    if (name) {
+    query += ` WHERE name LIKE '%${name}%'`;
+    }
+    sql.query(query, (err, res) => {
+    if (err) {
+    result(null, err);
+    return;
+    }
+    result(null, res[0]);
+    });
+    };
+    Data.getweightkeywordmax = (name, result) => {
+        let query = "SELECT MAX(weight) as max FROM keyword_dicts LIMIT 1;";
+        if (name) {
+        query += ` WHERE name LIKE '%${name}%'`;
+        }
+        sql.query(query, (err, res) => {
+        if (err) {
+        result(null, err);
+        return;
+        }
+        result(null, res[0]);
+        });
+        };
 Data.findById = (id, result) => {
 sql.query(`SELECT * FROM rule_based WHERE id = ${id}`, (err, res) => {
 if (err) {

@@ -41,6 +41,31 @@ err.message || "Some error occurred while retrieving table."
 else res.send(data);
 });
 };
+
+exports.getweightkeywordmax = (req, res) => {
+    const name = req.query.name;
+    Data.getweightkeywordmax(name, (err, data) => {
+    if (err)
+    res.status(500).send({
+    message:
+    err.message || "Some error occurred while retrieving table."
+    });
+    else res.send(data);
+    });
+    };
+
+    exports.getweightrulebasemax = (req, res) => {
+        const name = req.query.name;
+        Data.getweightrulebasemax(name, (err, data) => {
+        if (err)
+        res.status(500).send({
+        message:
+        err.message || "Some error occurred while retrieving table."
+        });
+        else res.send(data);
+        });
+        };
+
 exports.findOne = (req, res) => {
 Data.findById(req.params.id, (err, data) => {
 if (err) {

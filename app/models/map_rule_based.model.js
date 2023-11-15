@@ -259,7 +259,7 @@ result({ kind: "not_found" }, null);
 };
 
 Data.updateanswer = (id, datas, result) => {
-    console.log(datas);
+    // console.log(datas);
     // console.log(JSON.stringify(datas.advertise_id));
     // var map_advertiseget = []
     // map_advertiseget = JSON.parse(datas.advertise_id)

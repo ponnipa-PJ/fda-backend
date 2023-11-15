@@ -7,6 +7,10 @@ router.post("/", datas.create);
 
 router.get("/", datas.findAll);
 
+router.get("/getweightrulebasemax", datas.getweightrulebasemax);
+
+router.get("/getweightkeywordmax", datas.getweightkeywordmax);
+
 router.get("/getbydict", datas.getbydict);
 
 router.get("/:id", datas.findOne);
