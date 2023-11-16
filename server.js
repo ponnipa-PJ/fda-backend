@@ -27,7 +27,6 @@ const url = 'http://localhost:8081'
 app.use(cors(corsOptions));
 
 var bodyParser = require('body-parser');
-const { log } = require("console");
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
@@ -46,7 +45,7 @@ arrkeyword = []
 front = 0
 back = 0
 
-function getdicts(word) {
+async function getdicts(word) {
   dicts = []
   dictid = []
   arrdicts = []
@@ -54,7 +53,7 @@ function getdicts(word) {
   if (word) {
     dicts.push(word)
   }
-  axios.get(url + '/api/dicts?status=1').then((data) => {
+  await axios.get(url + '/api/dicts?status=1').then((data) => {
     // console.log(data.data);
     arrdicts = data.data
     for (let d = 0; d < data.data.length; d++) {
@@ -87,8 +86,8 @@ function getdicts(word) {
     }
   });
 }
-function getsetting() {
-  axios.get(url + '/api/token_setting/1').then((data) => {
+async function getsetting() {
+  await axios.get(url + '/api/token_setting/1').then((data) => {
     front = data.data.front_space
     back = data.data.back_space
   });
@@ -331,6 +330,11 @@ function getAllIndexes(arr, val) {
   return indexes;
 }
 app.post("/checkkeyword", async (req, res) => {
+  await getdicts()
+  await getkeyword()
+  await getsetting()
+  // console.log(keywords_name);
+
   // console.log(front, back);
   var name = req.body.content
   // console.log(name);
@@ -342,17 +346,18 @@ app.post("/checkkeyword", async (req, res) => {
   let union = dictkeyall.filter((c, index) => {
     return dictkeyall.indexOf(c) === index;
   });
+  // console.log(union);
   var indexlist = []
   for (let n = 0; n < name_result.length; n++) {
     for (let k = 0; k < union.length; k++) {
       if (name_result[n] == union[k]) {
         // console.log(name_result[n]);
         // let index = name_result.indexOf(name_result[n])
-        allindex = getAllIndexes(name_result, name_result[n])
-        for (let a = 0; a < allindex.length; a++) {
-          indexlist.push(allindex[a])
+        // allindex = getAllIndexes(name_result, name_result[n])
+        // for (let a = 0; a < allindex.length; a++) {
+          indexlist.push(n+1)
           
-        }
+        // }
       }
     }
   }
@@ -371,17 +376,19 @@ app.post("/checkkeyword", async (req, res) => {
     // console.log(countarray,uniqueindex[u]);
     if (countarray < uniqueindex[u]) {
       // console.log(uniqueindex[u]);
-      var backward = findbackward(name_result, uniqueindex[u], front)
+      var backward = findcutfback(name_result, uniqueindex[u], front)
+      // var backward = findbackward(name_result, uniqueindex[u], front)
       // console.log(backward);
       // console.log(name_result[backward]);
-      var findindexfore = name_result.slice([backward], uniqueindex[u])
+      // var findindexfore = name_result.slice([backward], uniqueindex[u])
       // var findindexlastname = name_result.slice(uniqueindex[u],name_result.length)
       // console.log(findindexfore);
       var forward = findcutfront(name_result, uniqueindex[u], back)
+      var forwardindex = findforward(name_result, uniqueindex[u], back)
       // var findindexback = name_result.slice(uniqueindex[u], forward)
       // console.log(forward);
       // console.log(findindexback);
-      var arrtoken = findindexfore.concat(forward);
+      var arrtoken = backward.concat(forward);
       // console.log(arrtoken);
       sen = arrtoken.toString()
       sen = sen.replaceAll(',', '')
@@ -389,10 +396,13 @@ app.post("/checkkeyword", async (req, res) => {
       var n = token(sen)
       // console.log('n',n);
       listarr.push(n)
-      countarray = forward
+      countarray = forwardindex
     }
 
   }
+  listarr = listarr.filter((c, index) => {
+    return listarr.indexOf(c) === index;
+  });
   // console.log(listarr);
   dict_id = []
   keyword_dict_id = []
@@ -479,6 +489,51 @@ app.post("/checkkeyword", async (req, res) => {
   res.json(jsonData);
 });
 
+function findcutfback(name_result, index, back) {
+  // console.log(name_result);
+  // console.log(index);
+  // console.log(back);
+  var newsen = name_result.slice(0,index)
+  // console.log(newsen);
+var sen = newsen.toString()
+// console.log(sen);
+sen = sen.replaceAll(',','')
+// console.log(sen);
+var split = sen.split(" ")
+// console.log(split);
+split = split.filter(n => n)
+// console.log(split);
+var arr = []
+var list =[]
+for (let b = 0; b < back; b++) {
+  if (split.length - (b+1)) {
+    list.push(split.length - (b+1))
+  }
+  
+}
+// console.log(list);
+list.sort();
+// console.log(list);
+// console.log(split);
+if (split.length > 0) {
+  for (let s = 0; s < list.length; s++) {
+    // console.log(split[list[s]]);
+    arr.push(split[list[s]])
+    if (s+1 != list.length) {
+      arr.push(' ')
+    }
+  }
+  // for (let s = 0; s < split.length; s++) {
+  //   if (s < back) {
+  //     arr.push(split[s])
+  //     arr.push(' ')
+  //   }
+  // }
+}
+// console.log(arr);
+// console.log(arr.toString());
+return arr
+}
 
 function findcutfront(name_result, index, back) {
   // console.log(name_result);

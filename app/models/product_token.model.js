@@ -452,8 +452,8 @@ Data.getproductkeyword = (newData, result) => {
     sql.query(`SELECT * FROM product_token WHERE id = "${newData.url}"`, (err, res) => {
         // console.log(res[0]);
         if (res.length != 0) {
-            let query = `SELECT a.* FROM advertise a where a.product_token_id = ${res[0].id} `;
-
+            let query = `SELECT a.* FROM advertise a where a.product_token_id = ${res[0].id} order by a.id`;
+// console.log(query);
             sql.query(query, async (err, des) => {
                 res[0].keyword = des
                 var arrrule = []
@@ -500,7 +500,7 @@ Data.getproduct = (newData, result) => {
         // console.log(`SELECT * FROM product_token WHERE id = "${newData.id}"`);
         // console.log(res[0]);
         if (res.length != 0) {
-            let query = `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id} order by count_rulebased,rule_based_id`;
+            let query = `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id} order by a.id`;
             // if (newData.id) {
             //     query += ` and m.user = ${newData.id}`
             // }
