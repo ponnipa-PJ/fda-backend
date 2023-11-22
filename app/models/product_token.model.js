@@ -1,9 +1,9 @@
 const sql = require("./db");
 const axios = require('axios');
 
-const url = 'http://localhost:8081'
+// const url = 'http://localhost:8081'
 
-// const url = 'https://api-fda.ponnipa.in.th'
+const url = 'https://api-fda.ponnipa.in.th'
 
 const Data = function (datas) {
     this.name = datas.name; this.fda = datas.fda; this.product_status = datas.product_status; this.cat_status = datas.cat_status; this.fda_status = datas.fda_status; this.name_status = datas.name_status; this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;

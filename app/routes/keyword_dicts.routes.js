@@ -7,6 +7,8 @@ router.post("/", datas.create);
 
 router.get("/", datas.findAll);
 
+router.get("/gettraining", datas.gettraining);
+
 router.get("/mapdictId", datas.mapdictId);
 
 router.get("/:id", datas.findOne);

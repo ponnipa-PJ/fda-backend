@@ -28,6 +28,47 @@ Data.mapdictId = (name, result) => {
     });
 };
 
+Data.gettraining = (name, result) => {
+    let query = "SELECT * FROM keyword_dicts";
+    
+        query += ` WHERE status = 1 order by weight desc`;
+    
+    sql.query(query, (err, res) => {
+        for (let k = 0; k < res.length; k++) {
+            if (res[k].rulebasedId) {
+                var rulearr = JSON.parse(res[k].rulebasedId)
+                statustrue = 0
+                statusfalse = 0
+                for (let r = 0; r < rulearr.length; r++) {
+                    let rule = `SELECT * FROM map_rule_based where id = ${rulearr[r]} LIMIT 1`;
+                sql.query(rule, (err, rules) => {
+                    // console.log(rules[0].statustrue);
+                    statustrue = statustrue+rules[0].statustrue
+                    statusfalse = statusfalse+rules[0].statusfalse
+                    var rulearrlenght = JSON.parse(res[k].rulebasedId).length
+                    // console.log(rulearrlenght , r+1);
+                    if (rulearrlenght == r+1) {
+                        res[k].statustrue = statustrue
+                        res[k].statusfalse = statusfalse
+                        res[k].total = statusfalse+statustrue
+                        statustrue = 0
+                statusfalse = 0
+                    }
+                })  
+                }
+                
+            }
+        }
+        if (err) { 
+            result(null, err);
+            return;
+        }
+        setTimeout(async () => {
+            result(null, res);
+        }, 500);
+    });
+};
+
 Data.getAll = (name, result) => {
     let query = "SELECT * FROM keyword_dicts";
     if (name) {
