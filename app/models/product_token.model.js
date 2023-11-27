@@ -1,13 +1,13 @@
 const sql = require("./db");
 const axios = require('axios');
 
-// const url = 'http://localhost:8081'
+const url = 'http://localhost:8081'
 
 // const url = 'https://api-fda.ponnipa.in.th'
-const url = 'https://api-fda.ci2ict.com'
+// const url = 'https://api-fda.ci2ict.com'
 
 const Data = function (datas) {
-    this.name = datas.name; this.fda = datas.fda; this.product_status = datas.product_status; this.cat_status = datas.cat_status; this.fda_status = datas.fda_status; this.name_status = datas.name_status; this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
+    this.sentencefull = datas.sentencefull;this.name = datas.name; this.fda = datas.fda; this.product_status = datas.product_status; this.cat_status = datas.cat_status; this.fda_status = datas.fda_status; this.name_status = datas.name_status; this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
 };
 Data.create = (newData, result) => {
     var data = {
@@ -16,6 +16,7 @@ Data.create = (newData, result) => {
         sentence_keyword: newData.sentence_keyword,
         keyword_id: JSON.stringify(newData.keyword_id),
         status: newData.status,
+        sentencefull:newData.sentencefull
     }
     sql.query("INSERT INTO product_token SET ?", data, (err, res) => {
         console.log(err);
@@ -736,10 +737,10 @@ Data.getproduct = (newData, result) => {
 
 Data.getAll = (name, result) => {
     console.log(name);
-    let query = "SELECT * FROM product_token";
-    if (name) {
-        query += ` WHERE url = '${name}'`;
-    }
+    let query = "SELECT * FROM product_token where status = 2";
+    // if (name) {
+    //     query += ` WHERE statu = '${name}'`;
+    // }
     sql.query(query, (err, res) => {
         if (err) {
             result(null, err);

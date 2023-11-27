@@ -93,7 +93,7 @@ exports.create = (req, res) => {
     }
 
     const datas = new Data({
-        id: req.body.id,keyword_id: req.body.keyword_id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+        sentencefull: req.body.sentencefull,id: req.body.id,keyword_id: req.body.keyword_id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
     });
     Data.create(datas, (err, data) => {
         console.log(err);

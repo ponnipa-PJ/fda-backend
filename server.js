@@ -21,9 +21,9 @@ keywords_name = []
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
-// const url = 'http://localhost:8081'
+const url = 'http://localhost:8081'
 // const url = 'https://api-fda.ponnipa.in.th'
-const url = 'https://api-fda.ci2ict.com'
+// const url = 'https://api-fda.ci2ict.com'
 
 app.use(cors(corsOptions));
 
