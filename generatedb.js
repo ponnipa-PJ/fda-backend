@@ -1,9 +1,9 @@
 var fs = require("fs");
 
-var table = "product_token"
+var table = "type_rulebased"
 var id = 'id'
 var data = [
-    'url','sentence','sentence_keyword','status'
+    'name','status'
 ]
 
 

@@ -1,13 +1,13 @@
 const sql = require("./db");
 const axios = require('axios');
 
-const url = 'http://localhost:8081'
+// const url = 'http://localhost:8081'
 
 // const url = 'https://api-fda.ponnipa.in.th'
-// const url = 'https://api-fda.ci2ict.com'
+const url = 'https://api-fda.ci2ict.com'
 
 const Data = function (datas) {
-    this.sentencefull = datas.sentencefull;this.name = datas.name; this.fda = datas.fda; this.product_status = datas.product_status; this.cat_status = datas.cat_status; this.fda_status = datas.fda_status; this.name_status = datas.name_status; this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
+    this.type_productId = datas.type_productId;this.type_rulebasedId = datas.type_rulebasedId;this.sentencefull = datas.sentencefull;this.name = datas.name; this.fda = datas.fda; this.product_status = datas.product_status; this.cat_status = datas.cat_status; this.fda_status = datas.fda_status; this.name_status = datas.name_status; this.id = datas.id; this.keyword_id = datas.keyword_id; this.url = datas.url; this.sentence = datas.sentence; this.sentence_keyword = datas.sentence_keyword; this.status = datas.status;
 };
 Data.create = (newData, result) => {
     var data = {
@@ -16,7 +16,9 @@ Data.create = (newData, result) => {
         sentence_keyword: newData.sentence_keyword,
         keyword_id: JSON.stringify(newData.keyword_id),
         status: newData.status,
-        sentencefull:newData.sentencefull
+        sentencefull:newData.sentencefull,
+        type_rulebasedId:newData.type_rulebasedId,
+        type_productId:newData.type_productId,
     }
     sql.query("INSERT INTO product_token SET ?", data, (err, res) => {
         console.log(err);
@@ -502,50 +504,31 @@ Data.getproduct = (newData, result) => {
         // console.log(`SELECT * FROM product_token WHERE id = "${newData.id}"`);
         // console.log(res[0]);
         if (res.length != 0) {
-            let query = `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id} order by a.id`;
-            // if (newData.id) {
-            //     query += ` and m.user = ${newData.id}`
+            let query = ''
+            // if (newData.fda_status) {
+            //     query += `SELECT a.*,m.statusfalse,m.statustrue,mu.id as map_rule_based_userId FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id left join map_rule_based_user mu on a.id = mu.advertiseId where a.product_token_id = ${res[0].id} and mu.userId = ${newData.fda_status}`
+            // }else{
+                query += `SELECT a.*,m.statusfalse,m.statustrue FROM advertise a join map_rule_based m on a.map_rule_based_id = m.id where a.product_token_id = ${res[0].id}`;
             // }
+            query += ' order by a.id'
             // console.log(query);
             sql.query(query, async (err, des) => {
-                // console.log(des);
+
                 if (des.length != 0) {
+                    
                 res[0].keyword = des
-                // let getmap = `SELECT * FROM map_rule_based where advertise_id = ${des[0].product_token_id}  `;
-                // if (newData.id) {
-                //     getmap += ` and user = ${newData.id}`
-                // }
-                // sql.query(getmap, async (err, getmaps) => {
-                //     if (getmaps.length > 0) {
-                //         res[0].keyword[0].answer = getmaps[0].answer
-                //         res[0].keyword[0].mapId = getmaps[0].id
-                //     }
-
-                // })
-                var arrrule = []
-                // for (let d = 0; d < res[0].keyword.length; d++) {
-                //     var jsonkeyword = JSON.parse(res[0].keyword[d].keyword_dict_id)
-                //     let keyword_id = jsonkeyword.filter((c, index) => {
-                //         return jsonkeyword.indexOf(c) === index;
-                //       });
-                //     for (let did = 0; did < keyword_id.length; did++) {
-                //                 let besttoken = `SELECT r.* FROM rule_based r join dicts d on r.dict_id = d.id join keyword_dicts k on k.name = d.name where r.dict_id = ${keyword_id[did]}`;
-                //         await sql.query(besttoken, async (err, besttokens) => {
-
-                //             var arrrule = []
-                //             for (let b = 0; b < besttokens.length; b++) {
-                //                 arrrule.push({map_rule_based_id:besttokens[b].map_rule_based_id,
-                //                 dict_id:keyword_id[did]})
-                //                 console.log(res[0].keyword.length);
-                //                 if (d+1 == res[0].keyword.length) {
-                //                     res[0].keyword[d].map = arrrule
-                //                 }
-
-                //             }
-
-                //         });
-                //         }
-                // }               
+                if (newData.fda_status) {
+for (let d = 0; d < res[0].keyword.length; d++) {
+        let getmap = `SELECT mu.id as map_rule_based_userId , mu.answer as answer FROM map_rule_based_user mu where mu.advertiseId = ${res[0].keyword[d].id} and mu.userId = ${newData.fda_status}`
+        sql.query(getmap, async (err, getmaps) => {
+            if (getmaps.length > 0) {
+                res[0].keyword[d].map_rule_based_userId = getmaps[0].map_rule_based_userId,
+                res[0].keyword[d].answer = getmaps[0].answer
+            }
+        });
+    }
+}
+                var arrrule = []           
             }else{
                 res[0].keyword = 1
             }
@@ -737,7 +720,7 @@ Data.getproduct = (newData, result) => {
 
 Data.getAll = (name, result) => {
     console.log(name);
-    let query = "SELECT * FROM product_token where status = 2";
+    let query = "SELECT p.*,tr.name as rulename,tp.name as typename FROM product_token p left join type_rulebased tr on p.type_rulebasedId = tr.id left join type_product tp on p.type_productId = tp.id where p.status = 2";
     // if (name) {
     //     query += ` WHERE statu = '${name}'`;
     // }
@@ -780,10 +763,14 @@ Data.updatemap = (id, datas, result) => {
 };
 
 Data.updateById = (id, datas, result) => {
+    // console.log(datas);
+    // console.log(id);
+        var keyword = JSON.stringify(datas.keyword_id)
     sql.query(
-        "UPDATE product_token SET url = ?,sentence = ?,sentence_keyword = ?,status = ? WHERE id = ?",
-        [datas.url, datas.sentence, datas.sentence_keyword, datas.status, id], (err, res) => {
+        "UPDATE product_token SET sentencefull=?,keyword_id=?, url = ?,sentence = ?,sentence_keyword = ?,status = ?,type_rulebasedId=?,type_productId=? WHERE id = ?",
+        [datas.sentencefull,keyword,datas.url, datas.sentence, datas.sentence_keyword, datas.status,datas.type_rulebasedId,datas.type_productId, id], (err, res) => {
             if (err) {
+                // console.log(err);
                 result(null, err);
                 return;
             }
