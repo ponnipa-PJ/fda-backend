@@ -64,6 +64,27 @@ exports.getproductkeyword = (req, res) => {
     });
 };
 
+exports.getproducttest = (req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+            message: 'Content can not be empty!'
+        });
+    }
+
+    const datas = new Data({
+        fda_status: req.body.fda_status,id: req.body.id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+    });
+    Data.getproducttest(datas, (err, data) => {
+        console.log(err);
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while creating the Tutorial."
+            });
+        else res.send(data);
+    });
+};
+
 exports.getproduct = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -93,7 +114,7 @@ exports.create = (req, res) => {
     }
 
     const datas = new Data({
-        type_productId: req.body.type_productId,type_rulebasedId: req.body.type_rulebasedId,sentencefull: req.body.sentencefull,id: req.body.id,keyword_id: req.body.keyword_id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
+        img_path: req.body.img_path,type_productId: req.body.type_productId,type_rulebasedId: req.body.type_rulebasedId,sentencefull: req.body.sentencefull,id: req.body.id,keyword_id: req.body.keyword_id,url: req.body.url, sentence: req.body.sentence, sentence_keyword: req.body.sentence_keyword, status: req.body.status,
     });
     Data.create(datas, (err, data) => {
         console.log(err);
@@ -101,6 +122,18 @@ exports.create = (req, res) => {
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while creating the Tutorial."
+            });
+        else res.send(data);
+    });
+};
+
+exports.findAlltest = (req, res) => {
+    const name = req.query.name;
+    Data.findAlltest(name, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving table."
             });
         else res.send(data);
     });

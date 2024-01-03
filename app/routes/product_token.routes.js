@@ -11,9 +11,13 @@ router.post("/getproductkeyword/", datas.getproductkeyword);
 
 router.post("/getproduct/", datas.getproduct);
 
+router.post("/getproducttest/", datas.getproducttest);
+
 router.post("/getbestrulebased/", datas.getbestrulebased);
 
 router.get("/", datas.findAll);
+
+router.get("/findAlltest", datas.findAlltest);
 
 router.get("/:id", datas.findOne);
 

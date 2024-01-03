@@ -1,4 +1,5 @@
 const express = require("express");
+const fileUpload = require('express-fileupload');
 const cors = require("cors");
 const base64Img = require('base64-img');
 var multer = require('multer');
@@ -26,18 +27,25 @@ const url = 'http://localhost:8081'
 // const url = 'https://api-fda.ci2ict.com'
 
 app.use(cors(corsOptions));
+app.use(fileUpload());
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
 
-app.use(express.static('./uploads'))
-app.use("/uploads", express.static("/uploads"));
+app.use(express.static('./'))
 
 var upload = multer({ dest: __dirname + '/uploads/' });
+var type = upload.single('upl');
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 
 var dictfile = 'customdict.txt'
 dicts = []
@@ -707,6 +715,26 @@ app.get("/img", (req, res) => {
   // console.log(imageData1);
   res.json({ base64: imageData1 });
 });
+
+app.post('/uploadimg', (req, res) => {
+
+  if (!req.files) {
+      return res.status(500).send({ msg: "file is not found" })
+  }
+  // accessing the file
+  const myFile = req.files.file;
+  var name = req.query.name
+  console.log(name);
+  //  mv() method places the file inside public directory
+  myFile.mv(`${__dirname}/uploads/img/${name}`, function (err) {
+      if (err) {
+          console.log(err)
+          return res.status(500).send({ msg: "Error occured" });
+      }
+      // returing the response with file path and name
+      return res.send({ name: myFile.name, path: `/${myFile.name}` });
+  });
+})
 
 require("./app/routes/products.routes")(app);
 require("./app/routes/category.routes")(app);
